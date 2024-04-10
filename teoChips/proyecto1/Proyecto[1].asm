@@ -1,14 +1,11 @@
-
-
-
 processor 16f877a
 include <p16f877a.inc>
 
-; Definici�n de variables y constantes
-valor   equ h '20'
-valor1  equ h '21'
-valor2  equ h '22'
- 
+; Definición de variables y constantes
+valor   equ 0x20
+valor1  equ 0x21
+valor2  equ 0x22
+
 org 0
 goto inicio
 org 5
@@ -25,17 +22,16 @@ inicio:
   movlw 0x00
   movwf TRISA
 
-
   bcf STATUS,5
   call inicia_lcd
   movlw 0x80
   call comando
   
-  loopf_movlw a 'R'
+  movlw 'R'
   call datos
-  goto loopf
+  goto $
 
-  inicia_lcd:
+inicia_lcd:
   movlw 0x30
   call comando
   call ret100ms
@@ -54,7 +50,7 @@ inicio:
   call comando
   return
 
-  comando:
+comando:
   movwf PORTB
   call ret200
   bcf PORTA,0
@@ -63,7 +59,7 @@ inicio:
   bcf PORTA,1
   return
   
-  datos:
+datos:
   movwf PORTB
   call ret200
   bsf PORTA,0
@@ -74,34 +70,34 @@ inicio:
   call ret200
   return
 
-  ret200:
+ret200:
   movlw 0x02
   movwf valor1
   
-  loop:
-  movlw d '164' 
+loop:
+  movlw 164
   movwf valor 
   
-  loop1: 
+loop1: 
   decfsz valor,1
   goto loop1 
   decfsz valor1,1
   goto loop
   return
 
-  ret100ms:
+ret100ms:
   movlw 0x03
   movwf valor
   
-  tres:
+tres:
   movlw 0xff
   movwf valor1
 
-  dos:
+dos:
   movlw 0xff
   movwf valor2
   
-  uno:
+uno:
   decfsz valor2
   goto uno
   decfsz valor1
@@ -110,11 +106,4 @@ inicio:
   goto tres
   return 
   
-  END
-
-
-
-
-
-
-
+END
