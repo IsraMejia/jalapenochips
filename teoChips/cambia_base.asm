@@ -1,3 +1,9 @@
+Tengo el siguiente codigo en ensamblador para el p16f877a, el cual convierte un numero hexadecimal a decimal, 
+Reviza cada digito del numero hexadecimal y lo convierte a decimal, esto mediante restas sucesivas, 
+para obtener las centenas, decenas y unidades (estas son el ultimo residuo negativo de la resta).
+La funcion Respuesta se encarga de hacer el swap en decenas, para despues sumarlo a centenas y unidades.
+Actualmente el codigo no funciona, me gustaria que como respuesta lo soluciones y me explicaras a detalle cada linea de codigo 
+
 
 processor 16f877a
 include <p16f877.inc> 
@@ -15,7 +21,7 @@ include <p16f877.inc>
 
  inicio:
 
-    ; Inicializar el número decimal como 0
+    ; Inicializar el numero decimal como 0
     clrf Decimal
     
     ; Inicializar el contador en 0
@@ -24,14 +30,14 @@ include <p16f877.inc>
     
 
 	movlw Hexadecimal ;w-> lo ponemos donde esta hexadecimal 
-	movwf FSR ;Transferir el valor de WREG a FSR para seleccionar la dirección de memoria
+	movwf FSR ;Transferir el valor de WREG a FSR para seleccionar la direccion de memoria
     
-recorrer_cada_díg_hexa:
-    movf  INDF, f ; Leer el dígito hexadecimal actual
-    btfss STATUS, Z ; Z=1 se dejara de recorrer el número por que llegamos al final  
+recorrer_cada_dig_hexa:
+    movf  INDF, f ; Leer el digito hexadecimal actual
+    btfss STATUS, Z ; Z=1 se dejara de recorrer el numero por que llegamos al final  
     call Convercion_decimal
-    ;avanzamos al siguiente dígito
-    incf FSR,F ; aqui apuntamos a la siguiente direción de memoria 
+    ;avanzamos al siguiente digito
+    incf FSR,F ; aqui apuntamos a la siguiente direccion de memoria 
     return ; regresamos 
     
  Convercion_decimal:
