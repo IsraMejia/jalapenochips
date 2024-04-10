@@ -1,0 +1,117 @@
+MPASM  5.48                     TAREAUNOO.ASM   4-10-2024  15:27:40         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[205]: Found directive in column 1. (processor)
+                      00001 processor 16f877a
+Warning[205]: Found directive in column 1. (include)
+Error[105]  : Cannot open file (Include File "C:\USERS\ISRACODE\DOCUMENTS\FI\2024-2\MICROS\JALAPENOCHIPS\TEOCHIPS\TAREAUNO\<.ASM")
+                      00002 include <
+Error[108]  : Illegal character (>)
+                      00003 .inc>
+                      00004 
+  00000020            00005 Hexadecimal equ 0x20 ; Direcci�n de memoria donde se almacena el n�mero hexadecimal
+  00000021            00006 Decimal equ 0x21 ; Direcci�n de memoria donde se almacena el n�mero decimal
+  00000022            00007 Cont_centenas equ 0x22 ; Direcci�n de memoria donde se almacena el contador de centenas
+  00000023            00008 Cont_decenas equ 0x23 ; Direcci�n de memoria donde se almacena el contador de decenas
+  00000024            00009 Cont_unidades equ 0x24 ; Direcci�n de memoria donde se almacena el contador de unidades
+                      00010 
+Warning[205]: Found directive in column 1. (org)
+0000                  00011 org 0
+Warning[203]: Found opcode in column 1. (goto)
+0000   2805           00012 goto inicio
+                      00013 
+Warning[205]: Found directive in column 1. (org)
+0005                  00014 org 5
+0005                  00015 inicio:
+                      00016     ; Inicializar los registros
+0005   01A1           00017     clrf Decimal
+0006   01A2           00018     clrf Cont_centenas
+0007   01A3           00019     clrf Cont_decenas
+0008   01A4           00020     clrf Cont_unidades
+0009   3020           00021     movlw Hexadecimal
+Error[113]  : Symbol not previously defined (FSR)
+000A   0080           00022     movwf FSR ; FSR apunta a la direcci�n de memoria del n�mero hexadecimal
+                      00023 
+000B                  00024 recorrer_cada_dig_hexa:
+Error[113]  : Symbol not previously defined (INDF)
+000B   0800           00025     movf INDF, w ; Leer el d�gito hexadecimal actual
+000C   2011           00026     call Conversion_decimal ; Llamar a la funci�n de conversi�n
+Error[113]  : Symbol not previously defined (FSR)
+000D   0A80           00027     incf FSR, f ; Apuntar al siguiente d�gito hexadecimal
+Error[113]  : Symbol not previously defined (STATUS)
+Error[113]  : Symbol not previously defined (Z)
+000E   1800           00028     btfsc STATUS, Z ; Verificar si se lleg� al final del n�mero hexadecimal
+000F   2818           00029     goto Respuesta ; Si se lleg� al final, saltar a la funci�n Respuesta
+0010   280B           00030     goto recorrer_cada_dig_hexa ; Repetir el proceso para el siguiente d�gito
+                      00031 
+0011                  00032 Conversion_decimal:
+0011   3010           00033     movlw 0x10 ; Constante 16 (base hexadecimal)
+Error[113]  : Symbol not previously defined (w)
+0012   0200           00034     subwf w, w ; w = w - 0x10
+Error[113]  : Symbol not previously defined (STATUS)
+Error[113]  : Symbol not previously defined (C)
+0013   1C00           00035     btfss STATUS, C ; Verificar si el resultado es negativo
+0014   0AA4           00036     incf Cont_unidades, f ; Si el resultado es positivo, incrementar el contador de unidades
+Error[113]  : Symbol not previously defined (STATUS)
+Error[113]  : Symbol not previously defined (C)
+MPASM  5.48                     TAREAUNOO.ASM   4-10-2024  15:27:40         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0015   1800           00037     btfsc STATUS, C ; Verificar si el resultado es negativo
+0016   0AA3           00038     incf Cont_decenas, f ; Si el resultado es negativo, incrementar el contador de decenas
+0017   0008           00039     return
+                      00040 
+0018                  00041 Respuesta:
+0018   0822           00042     movf Cont_centenas, w
+0019   00A1           00043     movwf Decimal
+001A   0823           00044     movf Cont_decenas, w
+Error[113]  : Symbol not previously defined (w)
+001B   0E80           00045     swapf w, f ; Intercambiar nibbles (decenas y unidades)
+001C   07A1           00046     addwf Decimal, f ; Sumar las decenas a las centenas
+001D   0824           00047     movf Cont_unidades, w
+001E   07A1           00048     addwf Decimal, f ; Sumar las unidades al n�mero decimal
+001F   0008           00049     return
+                      00050 
+0020                  00051 Terminados:
+0020   0063           00052     sleep
+                      00053     end
+MPASM  5.48                     TAREAUNOO.ASM   4-10-2024  15:27:40         PAGE  3
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+Cont_centenas                     00000022
+Cont_decenas                      00000023
+Cont_unidades                     00000024
+Conversion_decimal                00000011
+Decimal                           00000021
+Hexadecimal                       00000020
+Respuesta                         00000018
+Terminados                        00000020
+__16F877A                         00000001
+inicio                            00000005
+recorrer_cada_dig_hexa            0000000B
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : X----XXXXXXXXXXX XXXXXXXXXXXXXXXX X--------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:    29
+Program Memory Words Free:  8163
+
+
+Errors   :    13
+Warnings :     5 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+

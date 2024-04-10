@@ -3,7 +3,7 @@ Reviza cada digito del numero hexadecimal y lo convierte a decimal, esto mediant
 para obtener las centenas, decenas y unidades (estas son el ultimo residuo negativo de la resta).
 La funcion Respuesta se encarga de hacer el swap en decenas, para despues sumarlo a centenas y unidades.
 Actualmente el codigo no funciona, me gustaria que como respuesta lo soluciones y me explicaras a detalle cada linea de codigo 
-
+En la respuesta que generes omite los acentos en los comentarios
 
 processor 16f877a
 include <p16f877.inc> 

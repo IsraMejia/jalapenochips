@@ -1,0 +1,44 @@
+MPLINK 4.46, Linker
+Linker Map File - Created Wed Apr 10 11:11:58 2024
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x000002
+                   .org_2       code   0x000005    program   0x000038
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000000      
+                            0x000005    0x000020      
+            29 out of 8454 program addresses used, program memory utilization is 0%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+       Convercion_decimal   0x00000f    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\tareauno\tareaunoo.asm
+                  Decenas   0x000016    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\tareauno\tareaunoo.asm
+                Respuesta   0x000019    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\tareauno\tareaunoo.asm
+               Terminamos   0x000020    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\tareauno\tareaunoo.asm
+                   inicio   0x000005    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\tareauno\tareaunoo.asm
+   recorrer_cada_díg_hexa   0x00000a    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\tareauno\tareaunoo.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                   inicio   0x000005    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\tareauno\tareaunoo.asm
+   recorrer_cada_díg_hexa   0x00000a    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\tareauno\tareaunoo.asm
+       Convercion_decimal   0x00000f    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\tareauno\tareaunoo.asm
+                  Decenas   0x000016    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\tareauno\tareaunoo.asm
+                Respuesta   0x000019    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\tareauno\tareaunoo.asm
+               Terminamos   0x000020    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\tareauno\tareaunoo.asm
+
+
