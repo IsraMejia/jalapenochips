@@ -82,6 +82,9 @@ class p16f877a:
                 self.boton8 = 1
         else:
             print('Boton no válido')
+    
+    def seleccion_botones(self):
+        pass
 
     def juego(self):
         print('\n\n\nInicio del juego')
@@ -98,11 +101,13 @@ class p16f877a:
         '''
         self.pantalla_lcd_bienvenida()
         while self.boton0 == 0:  # Si se presiona el boton 0 (Start)
-            self.pantalla_lcd_muestra_jugadores()
             boton = int(input(menu_botones))
             print(f'\tSelecciono boton: {boton}')
             self.boton_seleccionado(boton)
-        print('START: Inicio del juego\n')
+            if self.boton0 == 1:
+                print('START: Inicio del juego\n')
+                self.pantalla_lcd_muestra_jugadores()
+        
 
         while self.boton7 != 1:
             boton = int(input(menu_botones))

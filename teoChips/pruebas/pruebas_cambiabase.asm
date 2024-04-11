@@ -1,85 +1,12 @@
+El siguiente codigo no compila:
 processor 16f877a
 include <p16f877.inc> 
- 
- Hexadecimal   equ 0x21
- Decimal       equ 0x22
-     
- Cont_centenas  equ 0x23
- Cont_decenas   equ 0x24
- 
- 
- org 0
-  goto inicio
- org 5 
 
- inicio:
-
-    ; Inicializar el n�mero decimal como 0
-    clrf Decimal
-    
-    ; Inicializar el contador en 0
-    clrf Cont_centenas
-    clrf Cont_decenas
-    
-
-	movlw Hexadecimal ;w-> lo ponemos donde esta hexadecimal 
-	movwf FSR ;Transferir el valor de WREG a FSR para seleccionar la direcci�n de memoria
-    
-recorrer_cada_d�g_hexa:
-    movf  INDF, f ; Leer el d�gito hexadecimal actual
-    btfss STATUS, Z ; Z=1 se dejara de recorrer el n�mero por que llegamos al final  
-    call Convercion_decimal
-    ;avanzamos al siguiente d�gito
-    incf FSR,F ; aqui apuntamos a la siguiente direci�n de memoria 
-    return ; regresamos 
-    
- Convercion_decimal:
-    
-    movlw 0X64 ; ponemos 100
-    subwf Hexadecimal,w  ; restamos 
-    btfsc STATUS,C ; si C=0 (+), nos  quedamos en las centenas 
-    incf Cont_centenas, F ; el contador lo incrementamos 
-    btfss STATUS,C ; si C=1 (-), nos  quedamos en las centenas 
-    incf Cont_decenas , F ; el contador lo incrementamos 
-    call  Decenas  
-   
-    
-  Decenas:
-    movlw 0x0A
-    subwf Hexadecimal,w
-    call Respuesta 
-
- Respuesta:
-   movf Cont_centenas, W
-   movwf Decimal
-   movf Cont_decenas, W
-   swapf W,F 
-   addwf Decimal,f
-   return 
-   goto Terminamos
- 
-
-  Terminamos:
-    sleep
-    
-END
-
-
-
-
-
-
-
-
-	
- 
-processor 16f877a
-include <p16f877.inc>
-
- Hexadecimal equ 0x20 ; Direcci�n de memoria donde se almacena el n�mero hexadecimal
- Decimal equ 0x21 ; Direcci�n de memoria donde se almacena el n�mero decimal
- Cont_centenas equ 0x22 ; Direcci�n de memoria donde se almacena el contador de centenas
- Cont_decenas equ 0x23 ; Direcci�n de memoria donde se almacena el contador de decenas
+Hexadecimal equ 0x20 ; Direcci�n de memoria donde se almacena el n�mero hexadecimal
+Decimal equ 0x21 ; Direcci�n de memoria donde se almacena el n�mero decimal
+Cont_centenas equ 0x22 ; Direcci�n de memoria donde se almacena el contador de centenas
+Cont_decenas equ 0x23 ; Direcci�n de memoria donde se almacena el contador de decenas
+Cont_unidades equ 0x24 ; Direcci�n de memoria donde se almacena el contador de unidades
 
 org 0
 goto inicio
@@ -90,7 +17,7 @@ inicio:
     clrf Decimal
     clrf Cont_centenas
     clrf Cont_decenas
-    
+    clrf Cont_unidades
     movlw Hexadecimal
     movwf FSR ; FSR apunta a la direcci�n de memoria del n�mero hexadecimal
 
@@ -103,26 +30,50 @@ recorrer_cada_dig_hexa:
     goto recorrer_cada_dig_hexa ; Repetir el proceso para el siguiente d�gito
 
 Conversion_decimal:
-    movlw 0x64 ; Constante 16 (base hexadecimal)
-    subwf w, w ; w = w - 0x64
+    movlw 0x10 ; Constante 16 (base hexadecimal)
+    subwf w, w ; w = w - 0x10
     btfss STATUS, C ; Verificar si el resultado es negativo
-    incf Cont_centenas, f ; Si el resultado es positivo, incrementar el contador de unidades
+    incf Cont_unidades, f ; Si el resultado es positivo, incrementar el contador de unidades
     btfsc STATUS, C ; Verificar si el resultado es negativo
     incf Cont_decenas, f ; Si el resultado es negativo, incrementar el contador de decenas
     return
 
-Conversion_decenas:
-    movlw 0xA ; Constante 16 (base hexadecimal)
-    subwf w, w ; w = w - 0x64
-    return
-   
 Respuesta:
     movf Cont_centenas, w
     movwf Decimal
     movf Cont_decenas, w
     swapf w, f ; Intercambiar nibbles (decenas y unidades)
     addwf Decimal, f ; Sumar las decenas a las centenas
+    movf Cont_unidades, w
+    addwf Decimal, f ; Sumar las unidades al n�mero decimal
     return
+
 Terminados:
     sleep
- end
+    end
+
+teninedo en cuenta su compiulacion resuelvelo:
+elease build of project `C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\tareauno\tareaunoo.disposable_mcp' started.
+Language tool versions: MPASMWIN.exe v5.48, mplink.exe v4.46, mplib.exe v4.46
+Wed Apr 10 23:55:06 2024
+----------------------------------------------------------------------
+Clean: Deleting intermediary and output files.
+Clean: Deleted file "C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\tareauno\tareaunoo.mcs".
+Clean: Done.
+Executing: "C:\Program Files (x86)\Microchip\MPASM Suite\MPASMWIN.exe" /q /p16F877A "tareaunoo.asm" /l"tareaunoo.lst" /e"tareaunoo.err"
+Warning[205] C:\USERS\ISRACODE\DOCUMENTS\FI\2024-2\MICROS\JALAPENOCHIPS\TEOCHIPS\TAREAUNO\TAREAUNOO.ASM 1 : Found directive in column 1. (processor)
+Warning[205] C:\USERS\ISRACODE\DOCUMENTS\FI\2024-2\MICROS\JALAPENOCHIPS\TEOCHIPS\TAREAUNO\TAREAUNOO.ASM 2 : Found directive in column 1. (include)
+Message[301] C:\PROGRAM FILES (X86)\MICROCHIP\MPASM SUITE\P16F877.INC 33 : MESSAGE: (Processor-header file mismatch.  Verify selected processor.)
+Warning[205] C:\USERS\ISRACODE\DOCUMENTS\FI\2024-2\MICROS\JALAPENOCHIPS\TEOCHIPS\TAREAUNO\TAREAUNOO.ASM 10 : Found directive in column 1. (org)
+Warning[203] C:\USERS\ISRACODE\DOCUMENTS\FI\2024-2\MICROS\JALAPENOCHIPS\TEOCHIPS\TAREAUNO\TAREAUNOO.ASM 11 : Found opcode in column 1. (goto)
+Warning[205] C:\USERS\ISRACODE\DOCUMENTS\FI\2024-2\MICROS\JALAPENOCHIPS\TEOCHIPS\TAREAUNO\TAREAUNOO.ASM 13 : Found directive in column 1. (org)
+Error[113]   C:\USERS\ISRACODE\DOCUMENTS\FI\2024-2\MICROS\JALAPENOCHIPS\TEOCHIPS\TAREAUNO\TAREAUNOO.ASM 33 : Symbol not previously defined (w)
+Error[113]   C:\USERS\ISRACODE\DOCUMENTS\FI\2024-2\MICROS\JALAPENOCHIPS\TEOCHIPS\TAREAUNO\TAREAUNOO.ASM 44 : Symbol not previously defined (w)
+Halting build on first failure as requested.
+----------------------------------------------------------------------
+Release build of project `C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\tareauno\tareaunoo.disposable_mcp' failed.
+Language tool versions: MPASMWIN.exe v5.48, mplink.exe v4.46, mplib.exe v4.46
+Wed Apr 10 23:55:07 2024
+----------------------------------------------------------------------
+BUILD FAILED
+omite acentos en el codigo
