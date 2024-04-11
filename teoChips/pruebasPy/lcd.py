@@ -13,6 +13,7 @@ class p16f877a:
         self.led1 = 0
         self.led2 = 0
         self.buzzer = 0
+        self.cuenta_vidas = 0
 
     def pantalla_lcd_bienvenida(self):
         print('''
@@ -23,7 +24,7 @@ class p16f877a:
         |         iniciar           |
         _____________________________
         ''')
-    
+
     def pantalla_lcd_muestra_jugadores(self):
         print('''
         _____________________________
@@ -34,7 +35,6 @@ class p16f877a:
         _____________________________
         ''')
 
-
     def pantalla_lcd_jugador(self, jugador, cuenta_vidas):
         print(f'''
         _____________________________
@@ -44,14 +44,20 @@ class p16f877a:
         |                           |
         _____________________________
         ''')
+
+    def muestra_partida(self, jugador):
+        self.cuenta_vidas = 0
+        boton6_anterior = self.boton6
+        tecla9_anterior = self.tecla9
     
-    def muestra_partida(self, jugador, cuenta_vidas):
-        while self.boton6 != 1: # Mientras no se presione el boton 6 (Acabar intento)
-            if self.tecla9 == 1:    # Si se presiona la tecla 9 (toco el cable pierde una vida)
-                cuenta_vidas += 1   # Se consume una vida y se muestra en pantalla
-                self.pantalla_lcd_jugador(jugador, cuenta_vidas)
-            else:
-                self.pantalla_lcd_jugador(jugador, cuenta_vidas)
+        while self.boton6 != 1:  # Mientras no se presione el boton 6 (Acabar intento)
+            if self.tecla9 == 1 and self.tecla9 != tecla9_anterior:  # Si se presiona la tecla 9 (toco el cable pierde una vida) y el estado ha cambiado
+                self.cuenta_vidas += 1   # Se consume una vida y se muestra en pantalla
+                self.pantalla_lcd_jugador(jugador, self.cuenta_vidas)
+                tecla9_anterior = self.tecla9  # Actualizamos el estado anterior de tecla9
+            elif self.boton6 == 1 :#and self.boton6 != boton6_anterior:  # Si se presiona el boton 6 y el estado ha cambiado
+                self.pantalla_lcd_jugador(jugador, self.cuenta_vidas)
+                boton6_anterior = self.boton6  # Actualizamos el estado anterior de boton6
 
     def boton_seleccionado(self, boton):
         self.boton0 = self.boton1 = self.boton2 = self.boton3 = self.boton4 = self.boton5 = self.boton6 = self.boton7 = self.boton8 = 0
@@ -78,24 +84,25 @@ class p16f877a:
             print('Boton no válido')
 
     def juego(self):
-        print('Inicio del juego')
-        menu_botones = ''' Presione Bonotes para interactuar con el juego
-    
-    
-
-Boton 0: Start
-Boton 1: Jugar Player 1
-Boton 2: Jugar Player 2
-Boton 3: Jugar Player 3
-Boton 4: Jugar Player 4
-Boton 5: Jugar Player 5
-Boton 6: Acabar intento
-Boton 7: Fin de juego
-Tecla 9: consume una vida el jugador actual
-
-Boton presionado =
-'''
+        print('\n\n\nInicio del juego')
+        menu_botones = ''' Presione botones para interactuar con el juego
+        Boton 0: Start
+        Boton 1: Jugar Player 1
+        Boton 2: Jugar Player 2
+        Boton 3: Jugar Player 3
+        Boton 4: Jugar Player 4
+        Boton 5: Jugar Player 5
+        Boton 6: Acabar intento
+        Boton 7: Fin de juego
+        Tecla 9: consume una vida el jugador actual (toco el cable)
+        '''
         self.pantalla_lcd_bienvenida()
+        while self.boton0 == 0:  # Si se presiona el boton 0 (Start)
+            self.pantalla_lcd_muestra_jugadores()
+            boton = int(input(menu_botones))
+            print(f'\tSelecciono boton: {boton}')
+            self.boton_seleccionado(boton)
+        print('START: Inicio del juego\n')
 
         while self.boton7 != 1:
             boton = int(input(menu_botones))
@@ -104,22 +111,33 @@ Boton presionado =
 
             if self.boton1 == 1:
                 print('Jugador 1 seleccionado')
+                self.muestra_partida('Erandi')
+
             elif self.boton2 == 1:
                 print('Jugador 2 seleccionado')
+                self.muestra_partida('Isra')
+
             elif self.boton3 == 1:
                 print('Jugador 3 seleccionado')
+                self.muestra_partida('Marisol')
+
             elif self.boton4 == 1:
                 print('Jugador 4 seleccionado')
+                self.muestra_partida('Martin')
+
             elif self.boton5 == 1:
                 print('Jugador 5 seleccionado')
+                self.muestra_partida('Jugador')
+
             elif self.boton6 == 1:
                 print('Intento finalizado')
             elif self.boton7 == 1:
                 print('Fin de juego')
             elif self.boton8 == 1:
                 print('Boton no válido')
-            else:
+            else: 
                 print('Boton no válido')
+            print('\n\n')
 
 # Ejemplo de uso
 p16f877a_obj = p16f877a()
