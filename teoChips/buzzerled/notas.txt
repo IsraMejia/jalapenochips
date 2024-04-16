@@ -1,0 +1,18 @@
+Requiero que me ayudes a desarollar un programa para el p16f877 en ensamblador.
+El ensamblador que usare es el MPLAB v8.89 y el simulador es el proteus 8.9
+
+El programa tiene que encender un led y sonar un buzzer, ambos por 2 segundos cuando se presione un boton.
+
+Dime por favor el paso a paso que me recomiendas hacer de forma detallada tanto para realizar el programa,
+como para simularlo en proteus. 
+
+y realizar las conexiones necesarias en el PIC cuando lo vaya a montar en la realidad.
+
+
+
+Como puedo hacer para en lugar de usar un boton. uso dos alambres, que al momento de hacer contacto manden una señal a un pin del PIC.
+Esta señal me tiene que servir para encender el led y el buzzer por 2 segundos.
+                        
+                    
+                     
+ 

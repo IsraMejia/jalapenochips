@@ -1,3 +1,5 @@
+import time
+
 class p16f877a:
     def __init__(self):
         self.boton0 = 0
@@ -94,6 +96,11 @@ class p16f877a:
         
         return jugador, menor_puntaje
 
+    def suenabuzzer_enciende_led():
+        print("Suena Buzzer y prende led 2 segundos")
+        #time.sleep(2) 
+        print("Dejo de sonar y se apago el led\n")
+
     def muestra_partida(self, jugador): 
         cuenta_vidas = 0
         self.pantalla_lcd_jugador(jugador, cuenta_vidas)    
@@ -103,6 +110,9 @@ class p16f877a:
                 cuenta_vidas += 1   # Se consume una vida y se muestra en pantalla
                 self.pantalla_lcd_jugador(jugador, cuenta_vidas)
                 self.tecla9 = 0
+                #self.suenabuzzer_enciende_led()
+                print("Suena Buzzer y prende led 2 segundos")
+                print("Dejo de sonar y se apago el led\n")
             elif self.boton6 == 1 :  # Si se presiona el boton 6 (Acabar intento)
                 print('\n\tIntento finalizado\n')
                 self.pantalla_lcd_muestra_jugadores() # Se muestra la pantalla de jugadores
