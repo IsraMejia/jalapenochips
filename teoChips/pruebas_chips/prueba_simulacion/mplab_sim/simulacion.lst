@@ -1,0 +1,883 @@
+MPASM  5.48                    SIMULACION.ASM   5-2-2024  19:49:00         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[205]: Found directive in column 1. (processor)
+                      00001 processor pic16f877a
+Warning[205]: Found directive in column 1. (include)
+                      00002 include <p16f877a.inc>
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ;  MPASM PIC16F877A processor include
+                      00005 ; 
+                      00006 ;  (c) Copyright 1999-2012 Microchip Technology, All rights reserved
+                      00007 ;==========================================================================
+                      00008 
+                      00566         LIST
+                      00003 
+                      00004 ; Definici�n de variables y constantes
+  00000020            00005 valor   equ h'20'
+  00000021            00006 valor1  equ h'21'
+  00000022            00007 valor2  equ h'22' 
+                      00008 
+  00000003            00009 num_participantes equ 3 ; N�mero de participantes que puede haber
+  00000023            00010 cont   equ  0x23 ; Para ver cuantas veces toca la varilla el cable
+                      00011 
+  00000000            00012 BOTON_1     EQU     RE0     ; Define el primer bot�n conectado al pin RE0
+  00000001            00013 BOTON_2     EQU     RE1     ; Define el segundo bot�n conectado al pin RE2
+  00000002            00014 BOTON_3     EQU     RE2     ; Define el tercer bot�n conectado al pin RE3
+                      00015 
+                      00016 
+Warning[205]: Found directive in column 1. (org)
+0000                  00017 org 0
+Warning[203]: Found opcode in column 1. (goto)
+0000   2805           00018 goto inicio
+Warning[205]: Found directive in column 1. (org)
+0005                  00019 org 5
+                      00020 
+0005                  00021 inicio:
+0005   0185           00022   clrf  PORTA       ; Limpia el registro PORTA
+0006   0186           00023   clrf  PORTB       ; Limpia el registro PORTB
+                      00024   
+                      00025 
+0007   1683           00026   bsf   STATUS,5   ; Establece el bit 5 del registro STATUS para cambiar al banco de registros 1
+0008   1303           00027   bcf   STATUS,6   ; Borra el bit 6 del registro STATUS para configurar el temporizador en modo 0
+0009   3000           00028   movlw 0x00       ; Carga el valor 0x00 en el registro W (registro de trabajo)
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000A   0086           00029   movwf TRISB      ; Configura todos los pines del puerto B como salidas
+000B   3007           00030   movlw 0x07       ; Carga el valor 0x07 en el registro W
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000C   009F           00031   movwf ADCON1     ; Configura el ADC para un funcionamiento normal
+000D   3000           00032   movlw 0x00       ; Carga el valor 0x00 en el registro W
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000E   0085           00033   movwf TRISA      ; Configura todos los pines del puerto A como salidas
+                      00034 
+                      00035   
+000F   1283           00036   bcf STATUS,5     ; Borra el bit 5 del registro STATUS para volver al banco de registros 0
+MPASM  5.48                    SIMULACION.ASM   5-2-2024  19:49:00         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0010   20B2           00037   call inicia_lcd  ; Llama a la subrutina para inicializar la pantalla LCD
+                      00038   
+                      00039 
+                      00040 
+0011                  00041 mostrar_bienvenida:
+                      00042 
+0011   3080           00043   movlw 0x80       ; Carga el valor 0x80 en el registro W
+0012   20C3           00044   call comando     ; Llama a la subrutina "comando" con el valor 0x80 (establecer la posici�n del curs
+                            or)
+0013   3030           00045   movlw '0'        ; Para que se pueda mostrar el "Bienvenidos 
+0014   20CA           00046   call datos
+0015   3020           00047   movlw ' '        ; Env�a el car�cter espacio
+0016   20CA           00048   call datos
+0017   3020           00049   movlw ' '        ; Env�a el car�cter espacio
+0018   20CA           00050   call datos
+                      00051 
+0019   3042           00052   movlw 'B'
+001A   20CA           00053   call datos
+001B   3069           00054   movlw 'i'
+001C   20CA           00055   call datos
+001D   3065           00056   movlw 'e'
+001E   20CA           00057   call datos
+001F   306E           00058   movlw 'n'
+0020   20CA           00059   call datos
+0021   3076           00060   movlw 'v'
+0022   20CA           00061   call datos
+0023   3065           00062   movlw 'e'
+0024   20CA           00063   call datos
+0025   306E           00064   movlw 'n'
+0026   20CA           00065   call datos
+0027   3069           00066   movlw 'i'
+0028   20CA           00067   call datos
+0029   3064           00068   movlw 'd'
+002A   20CA           00069   call datos
+002B   306F           00070   movlw 'o'
+002C   20CA           00071   call datos
+002D   3073           00072   movlw 's'
+002E   20CA           00073   call datos
+002F   20B0           00074   call esperar_20seg
+                      00075 
+                      00076 
+Warning[207]: Found label after column 1. (Nombres_Jugadores)
+0030                  00077   Nombres_Jugadores:
+                      00078   ; Mensaje en la primera l�nea
+0030   3080           00079   movlw 0x80       ; Posici�n del cursor en la primera l�nea
+0031   20C3           00080   call comando     ; Llama a la subrutina "comando" con el valor 0x80 (establecer la posici�n del curs
+                            or)
+0032   3030           00081   movlw '0'        ; Para que se pueda mostrar todo 
+0033   20CA           00082   call datos
+0034   304D           00083   movlw 'M'        
+0035   20CA           00084   call datos
+0036   3061           00085   movlw 'a'       
+0037   20CA           00086   call datos
+MPASM  5.48                    SIMULACION.ASM   5-2-2024  19:49:00         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0038   3072           00087   movlw 'r'        
+0039   20CA           00088   call datos
+003A   3069           00089   movlw 'i'        
+003B   20CA           00090   call datos
+003C   3073           00091   movlw 's'       
+003D   20CA           00092   call datos
+003E   306F           00093   movlw 'o'        
+003F   20CA           00094   call datos
+0040   306C           00095   movlw 'l'        
+0041   20CA           00096   call datos 
+                      00097   
+0042   3020           00098   movlw ' '     ; Env�a el car�cter espacio
+0043   20CA           00099   call datos
+0044   3020           00100   movlw ' '     ; Env�a el car�cter espacio
+0045   20CA           00101   call datos
+                      00102  
+0046   3045           00103   movlw 'E'        
+0047   20CA           00104   call datos
+0048   3072           00105   movlw 'r'       
+0049   20CA           00106   call datos
+004A   3061           00107   movlw 'a'        
+004B   20CA           00108   call datos
+004C   306E           00109   movlw 'n'        
+004D   20CA           00110   call datos
+004E   3064           00111   movlw 'd'        
+004F   20CA           00112   call datos
+0050   3069           00113   movlw 'i'        
+0051   20CA           00114   call datos
+                      00115   
+                      00116 
+0052   30C0           00117   movlw 0xC0    ; Posici�n del cursor en la segunda l�nea
+0053   20C3           00118   call comando
+0054   3020           00119   movlw ' '     ; Env�a el car�cter espacio
+0055   20CA           00120   call datos
+0056   3049           00121   movlw 'I'        
+0057   20CA           00122   call datos
+0058   3073           00123   movlw 's'       
+0059   20CA           00124   call datos
+005A   3072           00125   movlw 'r'        
+005B   20CA           00126   call datos
+005C   3061           00127   movlw 'a'        
+005D   20CA           00128   call datos
+005E   3065           00129   movlw 'e'       
+005F   20CA           00130   call datos
+0060   306C           00131   movlw 'l'
+0061   20CA           00132   call datos 
+0062   2862           00133   goto $ 
+                      00134 
+                      00135 ;*******************************************************************************************************
+                            ******  
+0063                  00136 Botones_A_Usar:
+                      00137   ; Se configura el puerto E como entrada 
+                      00138   ; Los botones aqui estar�n 
+MPASM  5.48                    SIMULACION.ASM   5-2-2024  19:49:00         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0063   1283           00139   bcf STATUS, RP0
+0064   1303           00140   bcf STATUS, RP1 
+0065   0189           00141   clrf PORTE
+                      00142   
+0066   3006           00143   movlw 0x06
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0067   009F           00144   movwf ADCON1
+0068   1683           00145   bsf STATUS,RP0
+0069   3007           00146   movlw 0x07 
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+006A   0089           00147   movwf TRISE
+006B   1283           00148   bcf STATUS, RP0 
+                      00149 
+                      00150 
+006C                  00151 Menu_Principal:
+                      00152     ; Si quiero el puerto A  a RA0 seria btfss PORTA,0
+                      00153     ; No se si hay confusion al asignar el PORTE de nuevo ya que tecnicamente esto me muestra lo que hac
+                            e Boton1_Precionado
+                      00154 
+006C   1C09           00155     btfss PORTE,0   ; aqui se deberia de establecer otro puerto dado que ya se uso RE0  para establecer 
+                            el BOTON_1  "Pero no se como hacerlo"  mas que nada cambiar de banco seria el problema 
+006D   286F           00156     goto Iniciar_Juego
+006E   286C           00157     goto Menu_Principal 
+                      00158 
+                      00159  
+006F                  00160 Iniciar_Juego:
+                      00161     ; Verifica si el bot�n 1 est� presionado
+006F   1800           00162     btfsc BOTON_1,0   ; RE0
+0070   2876           00163     goto Boton1_Presionado
+                      00164     ; Verifica si el bot�n 2 est� presionado
+0071   1881           00165     btfsc BOTON_2,1   ; RE1
+0072   288A           00166     goto Boton2_Presionado
+                      00167     ; Verifica si el bot�n 3 est� presionado
+0073   1902           00168     btfsc BOTON_3,2   ; RE2
+0074   289C           00169     goto Boton3_Presionado
+Error[113]  : Symbol not previously defined (Bucle_Principal)
+0075   2800           00170     goto Bucle_Principal     ; Si ning�n bot�n est� presionado, contin�a en el bucle principal
+                      00171 
+                      00172 
+0076                  00173 Boton1_Presionado:
+                      00174  ;Selccionamos al Jugador 1
+0076   1400           00175    bsf BOTON_1, 0   ;Si es as�, establece el bit BOTON_1 en 1  (no tengo idea si esta linea sea necesa
+                            ria o no ) 
+                      00176   
+0077   3080           00177    movlw 0x80       ; Posici�n del cursor en la primera l�nea
+0078   20C3           00178    call comando     ; Llama a la subrutina "comando" con el valor 0x80 (establecer la posici�n del cur
+                            sor)
+0079   3030           00179    movlw '0'        
+007A   20CA           00180    call datos
+007B   304D           00181    movlw 'M'        
+007C   20CA           00182    call datos 
+007D   3061           00183    movlw 'a'        
+007E   20CA           00184    call datos
+MPASM  5.48                    SIMULACION.ASM   5-2-2024  19:49:00         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+007F   3072           00185    movlw 'r'        
+0080   20CA           00186    call datos
+0081   3069           00187    movlw 'i'        
+0082   20CA           00188    call datos
+0083   3073           00189    movlw 's'       
+0084   20CA           00190    call datos
+0085   306F           00191    movlw 'o'        
+0086   20CA           00192    call datos
+0087   306C           00193    movlw 'l'        
+0088   20CA           00194    call datos 
+0089   286F           00195    goto Iniciar_Juego     ; Vuelve al bucle principal
+                      00196 
+008A                  00197 Boton2_Presionado:
+                      00198  ;Selccionamos al Jugador 2
+008A   1481           00199    bsf BOTON_2, 1  ;Si es as�, establece el bit BOTON_2 en 1  
+008B   3080           00200    movlw 0x80       ; Posici�n del cursor en la primera l�nea
+008C   20C3           00201    call comando     ; Llama a la subrutina "comando" con el valor 0x80 (establecer la posici�n del cur
+                            sor)
+008D   3030           00202    movlw '0'        
+008E   20CA           00203    call datos
+008F   3045           00204    movlw 'E'        
+0090   20CA           00205    call datos
+0091   3072           00206    movlw 'r'        
+0092   20CA           00207    call datos
+0093   3061           00208    movlw 'a'        
+0094   20CA           00209    call datos
+0095   306E           00210    movlw 'n'        
+0096   20CA           00211    call datos
+0097   3064           00212    movlw 'd'       
+0098   20CA           00213    call datos
+0099   3069           00214    movlw 'i'        
+009A   20CA           00215    call datos
+009B   286F           00216    goto Iniciar_Juego     ; Vuelve al bucle principal
+                      00217 
+                      00218 
+009C                  00219 Boton3_Presionado:
+                      00220  ;Selccionamos al Jugador 3
+009C   1502           00221    bsf BOTON_3, 2   ;Si es as�, establece el bit BOTON_3 en 1  
+009D   3080           00222    movlw 0x80       ; Posici�n del cursor en la primera l�nea
+009E   20C3           00223    call comando     ; Llama a la subrutina "comando" con el valor 0x80 (establecer la posici�n del cur
+                            sor)
+009F   3030           00224    movlw '0'        
+00A0   20CA           00225    call datos
+00A1   3049           00226    movlw 'I'        
+00A2   20CA           00227    call datos
+00A3   3073           00228    movlw 's'        
+00A4   20CA           00229    call datos
+00A5   3072           00230    movlw 'r'        
+00A6   20CA           00231    call datos
+00A7   3061           00232    movlw 'a'        
+00A8   20CA           00233    call datos
+00A9   3065           00234    movlw 'e'       
+00AA   20CA           00235    call datos
+MPASM  5.48                    SIMULACION.ASM   5-2-2024  19:49:00         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00AB   306C           00236    movlw 'l'        
+00AC   20CA           00237    call datos
+00AD   286F           00238    goto Iniciar_Juego     ; Vuelve al bucle principal
+                      00239 
+                      00240 
+                      00241 
+                      00242 
+                      00243 
+                      00244  
+                      00245 
+                      00246  
+                      00247 
+                      00248 ;*******************************************************************************************************
+                            ********
+00AE                  00249 limpiar_pantalla:
+00AE   3001           00250   movlw 0x01       ; Enviar comando para limpiar pantalla
+00AF   20C3           00251   call comando
+                      00252 
+                      00253   
+00B0                  00254 esperar_20seg:
+00B0   30F0           00255   movlw 0xF0       ; Cargar el valor 0xA0 en el registro W
+00B1   20DC           00256   call ret100ms    ; Esperar 500ms (0.5s) x 40 = 20 segundos
+                      00257 
+                      00258 
+                      00259 
+                      00260 
+00B2                  00261 Continuar: 
+                      00262 
+                      00263 
+                      00264  
+                      00265               
+Warning[207]: Found label after column 1. (inicia_lcd)
+00B2                  00266   inicia_lcd:
+00B2   3030           00267   movlw 0x30  
+00B3   20C3           00268   call comando
+00B4   20DC           00269   call ret100ms
+00B5   3030           00270   movlw 0x30
+00B6   20C3           00271   call comando
+00B7   20DC           00272   call ret100ms
+00B8   3038           00273   movlw 0x38
+00B9   20C3           00274   call comando
+00BA   300C           00275   movlw 0x0c
+00BB   20C3           00276   call comando
+00BC   3001           00277   movlw 0x01
+00BD   20C3           00278   call comando
+00BE   3006           00279   movlw 0x06
+00BF   20C3           00280   call comando
+00C0   3002           00281   movlw 0x02
+00C1   20C3           00282   call comando
+00C2   0008           00283   return
+                      00284 
+Warning[207]: Found label after column 1. (comando)
+00C3                  00285   comando:
+MPASM  5.48                    SIMULACION.ASM   5-2-2024  19:49:00         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00C3   0086           00286   movwf PORTB
+00C4   20D3           00287   call ret200
+00C5   1005           00288   bcf PORTA,0
+00C6   1485           00289   bsf PORTA,1
+00C7   20D3           00290   call ret200
+00C8   1085           00291   bcf PORTA,1
+00C9   0008           00292   return
+                      00293   
+Warning[207]: Found label after column 1. (datos)
+00CA                  00294   datos:
+00CA   0086           00295   movwf PORTB 
+00CB   20D3           00296   call ret200
+00CC   1405           00297   bsf PORTA,0
+00CD   1485           00298   bsf PORTA,1
+00CE   20D3           00299   call ret200
+00CF   1085           00300   bcf PORTA,1
+00D0   20D3           00301   call ret200
+00D1   20D3           00302   call ret200
+00D2   0008           00303   return
+                      00304 
+Warning[207]: Found label after column 1. (ret200)
+00D3                  00305   ret200:
+00D3   3002           00306   movlw 0x02
+00D4   00A1           00307   movwf valor1
+                      00308   
+Warning[207]: Found label after column 1. (loop)
+00D5                  00309   loop:
+00D5   30A4           00310   movlw d'164' 
+00D6   00A0           00311   movwf valor 
+                      00312   
+Warning[207]: Found label after column 1. (loop1)
+00D7                  00313   loop1: 
+00D7   0BA0           00314   decfsz valor,1
+00D8   28D7           00315   goto loop1 
+00D9   0BA1           00316   decfsz valor1,1
+00DA   28D5           00317   goto loop
+00DB   0008           00318   return
+                      00319 
+Warning[207]: Found label after column 1. (ret100ms)
+00DC                  00320   ret100ms:
+00DC   3003           00321   movlw 0x03
+00DD   00A0           00322   movwf valor
+                      00323   
+Warning[207]: Found label after column 1. (tres)
+00DE                  00324   tres:
+00DE   30FF           00325   movlw 0xff
+00DF   00A1           00326   movwf valor1
+                      00327 
+Warning[207]: Found label after column 1. (dos)
+00E0                  00328   dos:
+00E0   30FF           00329   movlw 0xff
+00E1   00A2           00330   movwf valor2
+                      00331   
+MPASM  5.48                    SIMULACION.ASM   5-2-2024  19:49:00         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[207]: Found label after column 1. (uno)
+00E2                  00332   uno:
+Message[305]: Using default destination of 1 (file).
+00E2   0BA2           00333   decfsz valor2
+00E3   28E2           00334   goto uno
+Message[305]: Using default destination of 1 (file).
+00E4   0BA1           00335   decfsz valor1
+00E5   28E0           00336   goto dos
+Message[305]: Using default destination of 1 (file).
+00E6   0BA0           00337   decfsz valor
+00E7   28DE           00338   goto tres
+00E8   0008           00339   return 
+                      00340 
+                      00341 
+Warning[207]: Found label after column 1. (TERMINO)
+00E9                  00342   TERMINO:
+00E9   0063           00343    sleep 
+                      00344   
+                      00345   END
+MPASM  5.48                    SIMULACION.ASM   5-2-2024  19:49:00         PAGE  9
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADCS2                             00000006
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BOTON_1                           00000000
+BOTON_2                           00000001
+BOTON_3                           00000002
+BRGH                              00000002
+Boton1_Presionado                 00000076
+Boton2_Presionado                 0000008A
+Boton3_Presionado                 0000009C
+Botones_A_Usar                    00000063
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1                             00000015
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2                             0000001B
+MPASM  5.48                    SIMULACION.ASM   5-2-2024  19:49:00         PAGE 10
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CIS                               00000003
+CKE                               00000006
+CKP                               00000004
+CM0                               00000000
+CM1                               00000001
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+CREN                              00000004
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+Continuar                         000000B2
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+D_A                               00000005
+D_NOT_A                           00000005
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+GO_NOT_DONE                       00000002
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+MPASM  5.48                    SIMULACION.ASM   5-2-2024  19:49:00         PAGE 11
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+Iniciar_Juego                     0000006F
+Menu_Principal                    0000006C
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+Nombres_Jugadores                 00000030
+OBF                               00000006
+OERR                              00000001
+OPTION_REG                        00000081
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+MPASM  5.48                    SIMULACION.ASM   5-2-2024  19:49:00         PAGE 12
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+R                                 00000002
+RA0                               00000000
+RA1                               00000001
+RA2                               00000002
+RA3                               00000003
+RA4                               00000004
+RA5                               00000005
+RB0                               00000000
+RB1                               00000001
+RB2                               00000002
+RB3                               00000003
+RB4                               00000004
+RB5                               00000005
+RB6                               00000006
+RB7                               00000007
+RBIE                              00000003
+RBIF                              00000000
+RC0                               00000000
+RC1                               00000001
+RC2                               00000002
+RC3                               00000003
+RC4                               00000004
+RC5                               00000005
+RC6                               00000006
+RC7                               00000007
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+RD0                               00000000
+RD1                               00000001
+RD2                               00000002
+RD3                               00000003
+RD4                               00000004
+RD5                               00000005
+RD6                               00000006
+RD7                               00000007
+RE0                               00000000
+RE1                               00000001
+RE2                               00000002
+READ_WRITE                        00000002
+RP0                               00000005
+RP1                               00000006
+RSEN                              00000001
+RX9                               00000006
+RX9D                              00000000
+R_NOT_W                           00000002
+R_W                               00000002
+MPASM  5.48                    SIMULACION.ASM   5-2-2024  19:49:00         PAGE 13
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+S                                 00000003
+SEN                               00000000
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATUS                            00000003
+SYNC                              00000004
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TERMINO                           000000E9
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1                              0000000E
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+MPASM  5.48                    SIMULACION.ASM   5-2-2024  19:49:00         PAGE 14
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TRISA                             00000085
+TRISA0                            00000000
+TRISA1                            00000001
+TRISA2                            00000002
+TRISA3                            00000003
+TRISA4                            00000004
+TRISA5                            00000005
+TRISB                             00000086
+TRISB0                            00000000
+TRISB1                            00000001
+TRISB2                            00000002
+TRISB3                            00000003
+TRISB4                            00000004
+TRISB5                            00000005
+TRISB6                            00000006
+TRISB7                            00000007
+TRISC                             00000087
+TRISC0                            00000000
+TRISC1                            00000001
+TRISC2                            00000002
+TRISC3                            00000003
+TRISC4                            00000004
+TRISC5                            00000005
+TRISC6                            00000006
+TRISC7                            00000007
+TRISD                             00000088
+TRISD0                            00000000
+TRISD1                            00000001
+TRISD2                            00000002
+TRISD3                            00000003
+TRISD4                            00000004
+TRISD5                            00000005
+TRISD6                            00000006
+TRISD7                            00000007
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+UA                                00000001
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+MPASM  5.48                    SIMULACION.ASM   5-2-2024  19:49:00         PAGE 15
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+WRERR                             00000003
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_BOREN_OFF                        00003FBF
+_BOREN_ON                         00003FFF
+_CONFIG                           00002007
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00001FFF
+_CP_OFF                           00003FFF
+_CP_ON                            00001FFF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_DEVID1                           00002006
+_FOSC_EXTRC                       00003FFF
+_FOSC_HS                          00003FFE
+_FOSC_LP                          00003FFC
+_FOSC_XT                          00003FFD
+_HS_OSC                           00003FFE
+_IDLOC0                           00002000
+_IDLOC1                           00002001
+_IDLOC2                           00002002
+_IDLOC3                           00002003
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDTE_OFF                         00003FFB
+_WDTE_ON                          00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+_XT_OSC                           00003FFD
+__16F877A                         00000001
+comando                           000000C3
+cont                              00000023
+datos                             000000CA
+dos                               000000E0
+esperar_20seg                     000000B0
+inicia_lcd                        000000B2
+inicio                            00000005
+limpiar_pantalla                  000000AE
+loop                              000000D5
+loop1                             000000D7
+mostrar_bienvenida                00000011
+num_participantes                 00000003
+ret100ms                          000000DC
+MPASM  5.48                    SIMULACION.ASM   5-2-2024  19:49:00         PAGE 16
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ret200                            000000D3
+tres                              000000DE
+uno                               000000E2
+valor                             00000020
+valor1                            00000021
+valor2                            00000022
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : X----XXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0080 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+00C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXX------ ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:   230
+Program Memory Words Free:  7962
+
+
+Errors   :     1
+Warnings :    17 reported,     0 suppressed
+Messages :     8 reported,     0 suppressed
+
+
