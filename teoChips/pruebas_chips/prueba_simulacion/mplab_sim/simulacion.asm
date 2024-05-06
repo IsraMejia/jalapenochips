@@ -1,3 +1,8 @@
+Analiza la logica del siguiente codigo ensamblador para el pic16f877a, que usamos el ensamblador de MPLABV8.89
+para usar una pantalla LCD 16x2 y 3 botones para seleccionar a 3 jugadores, el codigo es para un juego de mesa.
+Quiero que  aprenderte los detalles de este tipo de ensamblador, el como se definen los puertos de entrada y salida 
+del pic16f877a, asi del como se menejan los datos para interactuar con los pines mediante la logica de programacion
+
 processor pic16f877a
 include <p16f877a.inc>
 
@@ -43,7 +48,7 @@ mostrar_bienvenida:
   movlw 0x80       ; Carga el valor 0x80 en el registro W
   call comando     ; Llama a la subrutina "comando" con el valor 0x80 (establecer la posici�n del cursor)
   movlw '0'        ; Para que se pueda mostrar el "Bienvenidos 
-  call datos
+  call datosf
   movlw ' '        ; Env�a el car�cter espacio
   call datos
   movlw ' '        ; Env�a el car�cter espacio

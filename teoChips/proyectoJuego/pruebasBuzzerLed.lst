@@ -1,92 +1,102 @@
-MPASM  5.48                     BUZZERLED.ASM   4-15-2024  23:05:03         PAGE  1
+MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  19:56:55         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00001 ; Configuración del microcontrolador
-                      00002     processor 16f877a
-                      00003     include <p16f877.inc>
+Error[122]  : Illegal opcode (Codigo)
+                      00001 # Codigo ASM para el microcontrolador PIC16F877A que 
+Error[122]  : Illegal opcode (enciende)
+                      00002 # enciende un zumbador y un LED durante 1 segundo cuando se pulsa un boton.
+Error[122]  : Illegal opcode (El)
+                      00003 # El codigo utiliza una interrupcion externa para detectar el boton pulsado 
+Error[122]  : Illegal opcode (y)
+                      00004 # y una subrutina de espera para esperar 1 segundo antes de apagar el zumbador 
+Error[122]  : Illegal opcode (y)
+                      00005 # y el LED. Se esta usando para hacer el build MPLAB V8.92 
+                      00006 
+Warning[205]: Found directive in column 1. (processor)
+                      00007 processor pic16f877a
+Warning[205]: Found directive in column 1. (include)
+                      00008 include <p16f877a.inc> 
                       00001         LIST
                       00002 
                       00003 ;==========================================================================
-                      00004 ;  MPASM PIC16F877 processor include
+                      00004 ;  MPASM PIC16F877A processor include
                       00005 ; 
                       00006 ;  (c) Copyright 1999-2012 Microchip Technology, All rights reserved
                       00007 ;==========================================================================
                       00008 
-Message[301]: MESSAGE: (Processor-header file mismatch.  Verify selected processor.)
-                      00540         LIST
-                      00004 
-                      00005 ; Definición de constantes
-                      00006     CBLOCK  0x20
-  00000020            00007         BOTON_ESTADO  ; Variable para almacenar el estado del botón
-  00000021            00008         CONTADOR     ; Variable para el contador de tiempo
-                      00009     ENDC
-                      00010 
-                      00011 ; Inicio del programa
-0000                  00012     ORG     0x00
-0000   2801           00013     GOTO    INICIO
+                      00566         LIST
+                      00009 
+                      00010 ; Definicion de variables y constantes
+  00000001            00011 pinBoton    equ RC1    ; Puerto de entrada para el boton pulsado (RC1)
+  00000002            00012 pinZumbador equ RC2    ; Puerto de salida para el zumbador (RC2)
+  00000003            00013 pinLED      equ RC3    ; Puerto de salida para el LED (RC3)
                       00014 
-                      00015 ; Rutina de interrupción (si es necesaria)
-                      00016 ; INTERRUPT_VECTOR
-                      00017 ;   BTFSS   INTCON,RBIF    ; Verificar si la interrupción es por el cambio de estado en RB
-                      00018 ;   GOTO    FIN_INTERRUPCIÓN
-                      00019 ;   BCF     INTCON,RBIF    ; Limpiar el flag de interrupción
-                      00020 ;   MOVLW   0x01
-                      00021 ;   MOVWF   BOTON_ESTADO   ; Activar la bandera de presión del botón
-                      00022 ; FIN_INTERRUPCIÓN:
-                      00023 ;   RETFIE
-                      00024 
-                      00025 ; Rutina principal
-0001                  00026 INICIO:
-0001   1683 1303      00027     BANKSEL TRISA        ; Seleccionar el banco de registros
+                      00015 
+Warning[205]: Found directive in column 1. (org)
+0000                  00016 org 0H ;Carga al vector RESET la direccion de la etiqueta inicio
+Warning[203]: Found opcode in column 1. (goto)
+0000   2805           00017 goto inicio
+                      00018 
+Warning[205]: Found directive in column 1. (org)
+0005                  00019 org 5H; Direccion de inicio del programa
+0005                  00020 inicio:
+                      00021     ; Configuracion inicial de puertos
+0005   0187           00022     clrf PORTC          ; Limpia el puerto C
+0006   1683           00023     bsf STATUS, RP0     ; Cambia al banco de registros 1
+0007   1303           00024     BCF STATUS, RP1     ; Cambia al banco de registros 1
+0008   3002           00025     movlw B'00000010'   ; Configura todos los pines de PORTC como salidas
+                      00026                         ; excepto el pin del boton (RC1)
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0003   0186           00028     CLRF    TRISB        ; Configurar el puerto B como salida
-0004   3010           00029     MOVLW   0x10         ; Configurar RB4 como entrada
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0005   0486           00030     IORWF   TRISB,F
-                      00031 
-0006   1283 1303      00032     BANKSEL PORTB        ; Seleccionar el banco de registros
-0008   0186           00033     CLRF    PORTB        ; Inicializar el puerto B en 0
-                      00034 
-0009   01A0           00035     CLRF    BOTON_ESTADO ; Inicializar la variable de estado del botón
-                      00036 
-000A                  00037 LOOP:
-000A   1A06           00038     BTFSC   PORTB,4       ; Verificar si el botón está presionado
-000B   280D           00039     GOTO    BOTÓN_PRESIONADO
-000C   280A           00040     GOTO    LOOP
-                      00041 
-MPASM  5.48                     BUZZERLED.ASM   4-15-2024  23:05:03         PAGE  2
+0009   0087           00027     movwf TRISC         ; Registro TRISB como salidas
+000A   1283           00028     bcf STATUS, RP0     ; Vuelve al banco de registros 0 
+000B   280C           00029     goto bucle_boton ; se llama el bucle_boton para detectar el boton pulsado y actuar en ello
+                      00030  
+                      00031  
+000C                  00032 bucle_boton:
+                      00033  
+MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  19:56:55         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-000D                  00042 BOTÓN_PRESIONADO:
-000D   3001           00043     MOVLW   0x01
-000E   00A0           00044     MOVWF   BOTON_ESTADO  ; Activar la bandera de presión del botón
-000F   2012           00045     CALL    ENCENDER_LED_Y_BUZZER
-0010   2019           00046     CALL    APAGAR_LED_Y_BUZZER
-0011   280A           00047     GOTO    LOOP
-                      00048 
-0012                  00049 ENCENDER_LED_Y_BUZZER:
-0012   1406           00050     BSF     PORTB,0       ; Encender el LED
-0013   1486           00051     BSF     PORTB,1       ; Encender el buzzer
-0014   3064           00052     MOVLW   0x64         ; Cargar el valor inicial del contador (100 decisegundos = 2 segundos)
-0015   00A1           00053     MOVWF   CONTADOR
-0016                  00054 ESPERAR:
-0016   0BA1           00055     DECFSZ  CONTADOR,F    ; Decrementar el contador
-0017   2816           00056     GOTO    ESPERAR
-0018   0008           00057     RETURN
-                      00058 
-0019                  00059 APAGAR_LED_Y_BUZZER:
-0019   1006           00060     BCF     PORTB,0       ; Apagar el LED
-001A   1086           00061     BCF     PORTB,1       ; Apagar el buzzer
-001B   0008           00062     RETURN
-                      00063 
-                      00064     END
-MPASM  5.48                     BUZZERLED.ASM   4-15-2024  23:05:03         PAGE  3
+                      00034     ; Ejemplo: si se presiona el botón, enciende el LED y el zumbador durante un segundo
+000C   1887           00035     btfsc PORTC, pinBoton  ; Verifica si el botón ha sido pulsado (si está en 0)
+000D   280C           00036     goto bucle_boton  ; Si no se ha pulsado, vuelve a revisar el botón
+                      00037 
+000E   1507           00038     bsf PORTC, pinZumbador  ; Enciende el zumbador
+000F   1587           00039     bsf PORTC, pinLED      ; Enciende el LED
+0010   2014           00040     call espera_1_segundo  ; Espera 1 segundo
+0011   1107           00041     bcf PORTC, pinZumbador  ; Apaga el zumbador después de 1 segundo
+0012   1187           00042     bcf PORTC, pinLED      ; Apaga el LED después de 1 segundo
+                      00043 
+0013   280C           00044     goto bucle_boton  ; Vuelve al inicio del bucle_boton principal
+                      00045  
+                      00046 ; Funcion de manejo de interrupcion para el boton pulsado
+                      00047 ;org 4
+0014                  00048 espera_1_segundo:
+0014   30FA           00049     movlw d'250'        ; Se carga el valor 250 en W
+Error[113]  : Symbol not previously defined (COUNT)
+0015   0080           00050     movwf COUNT         ; Se asigna el valor a un contador
+                      00051 
+                      00052     ; Subrutina para generar un retardo de aproximadamente 1 segundo
+0016   30FA           00053     movlw d'250'        ; Valor para un retardo de aproximadamente 1 segundo
+Error[113]  : Symbol not previously defined (COUNT)
+0017   0080           00054     movwf COUNT         ; Asigna el valor a COUNT
+0018   2019           00055     call ciclo_retardo  ; Llama a la subrutina de retardo
+                      00056 
+0019                  00057 ciclo_retardo:
+Error[113]  : Symbol not previously defined (COUNT)
+0019   0B80           00058     decfsz COUNT, f     ; Decrementa el contador y salta si es cero
+001A   2819           00059     goto ciclo_retardo  ; Continúa el bucle si el contador no es cero
+001B   3400           00060     retlw 0             ; Retorna al finalizar el retardo
+                      00061 
+                      00062   
+Error[129]  : Expected (END)
+MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  19:56:55         PAGE  3
 
 
 SYMBOL TABLE
@@ -99,6 +109,7 @@ ADCON0                            0000001F
 ADCON1                            0000009F
 ADCS0                             00000006
 ADCS1                             00000007
+ADCS2                             00000006
 ADDEN                             00000003
 ADFM                              00000007
 ADIE                              00000006
@@ -106,14 +117,15 @@ ADIF                              00000006
 ADON                              00000000
 ADRESH                            0000001E
 ADRESL                            0000009E
-APAGAR_LED_Y_BUZZER               00000019
 BCLIE                             00000003
 BCLIF                             00000003
 BF                                00000000
-BOTON_ESTADO                      00000020
-BOTÓN_PRESIONADO                 0000000D
 BRGH                              00000002
 C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
 CCP1CON                           00000017
 CCP1IE                            00000002
 CCP1IF                            00000002
@@ -141,17 +153,31 @@ CCPR2L                            0000001B
 CHS0                              00000003
 CHS1                              00000004
 CHS2                              00000005
+CIS                               00000003
 CKE                               00000006
-CKP                               00000004
-CONTADOR                          00000021
-CREN                              00000004
-MPASM  5.48                     BUZZERLED.ASM   4-15-2024  23:05:03         PAGE  4
+MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  19:56:55         PAGE  4
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+CKP                               00000004
+CM0                               00000000
+CM1                               00000001
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+CREN                              00000004
 CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
 D                                 00000005
 DATA_ADDRESS                      00000005
 DC                                00000001
@@ -166,8 +192,6 @@ EEDATH                            0000010E
 EEIE                              00000004
 EEIF                              00000004
 EEPGD                             00000007
-ENCENDER_LED_Y_BUZZER             00000012
-ESPERAR                           00000016
 F                                 00000001
 FERR                              00000002
 FSR                               00000004
@@ -183,15 +207,19 @@ I2C_STOP                          00000004
 IBF                               00000007
 IBOV                              00000005
 INDF                              00000000
-INICIO                            00000001
 INTCON                            0000000B
 INTE                              00000004
 INTEDG                            00000006
 INTF                              00000001
 IRP                               00000007
-LOOP                              0000000A
 NOT_A                             00000005
 NOT_ADDRESS                       00000005
+MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  19:56:55         PAGE  5
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 NOT_BO                            00000000
 NOT_BOR                           00000000
 NOT_DONE                          00000002
@@ -204,12 +232,6 @@ NOT_TO                            00000004
 NOT_TX8                           00000006
 NOT_W                             00000002
 NOT_WRITE                         00000002
-MPASM  5.48                     BUZZERLED.ASM   4-15-2024  23:05:03         PAGE  5
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 OBF                               00000006
 OERR                              00000001
 OPTION_REG                        00000081
@@ -251,6 +273,12 @@ RB0                               00000000
 RB1                               00000001
 RB2                               00000002
 RB3                               00000003
+MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  19:56:55         PAGE  6
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 RB4                               00000004
 RB5                               00000005
 RB6                               00000006
@@ -263,12 +291,6 @@ RC2                               00000002
 RC3                               00000003
 RC4                               00000004
 RC5                               00000005
-MPASM  5.48                     BUZZERLED.ASM   4-15-2024  23:05:03         PAGE  6
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 RC6                               00000006
 RC7                               00000007
 RC8_9                             00000006
@@ -310,6 +332,12 @@ SSPBUF                            00000013
 SSPCON                            00000014
 SSPCON2                           00000091
 SSPEN                             00000005
+MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  19:56:55         PAGE  7
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 SSPIE                             00000003
 SSPIF                             00000003
 SSPM0                             00000000
@@ -322,12 +350,6 @@ STATUS                            00000003
 SYNC                              00000004
 T0CS                              00000005
 T0IE                              00000005
-MPASM  5.48                     BUZZERLED.ASM   4-15-2024  23:05:03         PAGE  7
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 T0IF                              00000002
 T0SE                              00000004
 T1CKPS0                           00000004
@@ -369,6 +391,12 @@ TRISB0                            00000000
 TRISB1                            00000001
 TRISB2                            00000002
 TRISB3                            00000003
+MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  19:56:55         PAGE  8
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 TRISB4                            00000004
 TRISB5                            00000005
 TRISB6                            00000006
@@ -381,12 +409,6 @@ TRISC3                            00000003
 TRISC4                            00000004
 TRISC5                            00000005
 TRISC6                            00000006
-MPASM  5.48                     BUZZERLED.ASM   4-15-2024  23:05:03         PAGE  8
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 TRISC7                            00000007
 TRISD                             00000088
 TRISD0                            00000000
@@ -425,10 +447,15 @@ _BOREN_ON                         00003FFF
 _CONFIG                           00002007
 _CPD_OFF                          00003FFF
 _CPD_ON                           00003EFF
-_CP_ALL                           00000FCF
-_CP_HALF                          00001FDF
+_CP_ALL                           00001FFF
 _CP_OFF                           00003FFF
-_CP_UPPER_256                     00002FEF
+_CP_ON                            00001FFF
+MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  19:56:55         PAGE  9
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 _DEBUG_OFF                        00003FFF
 _DEBUG_ON                         000037FF
 _DEVID1                           00002006
@@ -440,12 +467,6 @@ _HS_OSC                           00003FFE
 _IDLOC0                           00002000
 _IDLOC1                           00002001
 _IDLOC2                           00002002
-MPASM  5.48                     BUZZERLED.ASM   4-15-2024  23:05:03         PAGE  9
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 _IDLOC3                           00002003
 _LP_OSC                           00003FFC
 _LVP_OFF                          00003F7F
@@ -457,26 +478,33 @@ _WDTE_OFF                         00003FFB
 _WDTE_ON                          00003FFF
 _WDT_OFF                          00003FFB
 _WDT_ON                           00003FFF
-_WRT_ENABLE_OFF                   00003DFF
-_WRT_ENABLE_ON                    00003FFF
-_WRT_OFF                          00003DFF
-_WRT_ON                           00003FFF
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
 _XT_OSC                           00003FFD
 __16F877A                         00000001
+bucle_boton                       0000000C
+ciclo_retardo                     00000019
+espera_1_segundo                  00000014
+inicio                            00000005
+pinBoton                          00000001
+pinLED                            00000003
+pinZumbador                       00000002
 
 
 MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
 
-0000 : XXXXXXXXXXXXXXXX XXXXXXXXXXXX---- ---------------- ----------------
+0000 : X----XXXXXXXXXXX XXXXXXXXXXXX---- ---------------- ----------------
 
 All other memory blocks unused.
 
-Program Memory Words Used:    28
-Program Memory Words Free:  8164
+Program Memory Words Used:    24
+Program Memory Words Free:  8168
 
 
-Errors   :     0
-Warnings :     0 reported,     0 suppressed
-Messages :     3 reported,     0 suppressed
+Errors   :     9
+Warnings :     5 reported,     0 suppressed
+Messages :     1 reported,     0 suppressed
 
 

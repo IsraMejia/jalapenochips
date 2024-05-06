@@ -1,13 +1,11 @@
-Como modificarias el siguiente codigo para que al presionar el boton del pin dos,
-el zumbador del pin 4 suene por un segundo 
-y el led del pin D5 encienda tambien por un segundo al mismo tiempo que suena el zumbador.
 
 from machine import Pin, PWM
 import time
 
 pinBoton = 2  # Pin del botón
 pinZumbador = 4  # Pin del zumbador 
-frecuencia = 100
+pinLED = 5  # Pin del LED
+frecuencia = 500
 resolucion = 8
 
 # Configuración inicial del zumbador
@@ -17,9 +15,11 @@ pwm.duty(0)
 
 # Función para manejar la interrupción del botón
 def boton_pulsado(pin):
-    pwm.duty(255)  # Establece el ciclo de trabajo al máximo
+    pwm.duty(255)  # Establece el ciclo de trabajo del zumbador al máximo
+    Pin(pinLED, Pin.OUT).on()  # Enciende el LED
     time.sleep(1)  # Espera 1 segundo
     pwm.duty(0)  # Apaga el zumbador después de 1 segundo
+    Pin(pinLED, Pin.OUT).off()  # Apaga el LED
 
 # Configura el pin del botón como entrada con pull-up interno
 pin_boton = Pin(pinBoton, Pin.IN, Pin.PULL_UP)

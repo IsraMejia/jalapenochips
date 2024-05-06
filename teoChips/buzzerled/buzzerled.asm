@@ -1,64 +1,56 @@
-; ConfiguraciÃ³n del microcontrolador
-    processor 16f877a
-    include <p16f877.inc>
+PROCESSOR 16F877A
+    INCLUDE <P16F877A.INC>
 
-; DefiniciÃ³n de constantes
-    CBLOCK  0x20
-        BOTON_ESTADO  ; Variable para almacenar el estado del botÃ³n
-        CONTADOR     ; Variable para el contador de tiempo
-    ENDC
+    __CONFIG _CP_OFF & _WDT_OFF & _BODEN_OFF & _PWRTE_ON & _XT_OSC & _WRT_OFF & _LVP_OFF & _CPD_OFF
 
-; Inicio del programa
-    ORG     0x00
-    GOTO    INICIO
+; Definición de variables y constantes
+BOTON_PULSADO   EQU     0x20    ; Bandera para indicar que se presionó el botón
+TIEMPO_ESPERA   EQU     D'200'  ; Valor para esperar 1 segundo (200 x 5ms)
 
-; Rutina de interrupciÃ³n (si es necesaria)
-; INTERRUPT_VECTOR
-;   BTFSS   INTCON,RBIF    ; Verificar si la interrupciÃ³n es por el cambio de estado en RB
-;   GOTO    FIN_INTERRUPCIÃ“N
-;   BCF     INTCON,RBIF    ; Limpiar el flag de interrupciÃ³n
-;   MOVLW   0x01
-;   MOVWF   BOTON_ESTADO   ; Activar la bandera de presiÃ³n del botÃ³n
-; FIN_INTERRUPCIÃ“N:
-;   RETFIE
+; Vectores de interrupción
+ ORG     0x0004
+ GOTO    INT_BOTON   ; Rutina de interrupción del botón
 
-; Rutina principal
+; Código principal
+ ORG     0x0000
+ GOTO    INICIO
+
 INICIO:
-    BANKSEL TRISA        ; Seleccionar el banco de registros
-    CLRF    TRISB        ; Configurar el puerto B como salida
-    MOVLW   0x10         ; Configurar RB4 como entrada
-    IORWF   TRISB,F
+ BANKSEL TRISC       ; Selecciona el banco de registros para TRISC
+ MOVLW   b'00000001' ; Configura RC1 como entrada (botón)
+ MOVWF   TRISC       ; Configura RC2 y RC3 como salidas (zumbador y LED)
 
-    BANKSEL PORTB        ; Seleccionar el banco de registros
-    CLRF    PORTB        ; Inicializar el puerto B en 0
+ BANKSEL PORTC       ; Selecciona el banco de registros para PORTC
+ CLRF    PORTC       ; Apaga el zumbador y el LED
 
-    CLRF    BOTON_ESTADO ; Inicializar la variable de estado del botÃ³n
+ BSF     INTCON, GIE ; Habilita interrupciones globales
+ BSF     INTCON, RBIF; Establece la bandera de interrupción en RB
+ BSF     INTCON, RBIE; Habilita interrupciones en RB
 
-LOOP:
-    BTFSC   PORTB,4       ; Verificar si el botÃ³n estÃ¡ presionado
-    GOTO    BOTÃ“N_PRESIONADO
-    GOTO    LOOP
+Bucle_Principal:
+ GOTO    Bucle_Principal ; Bucle principal
 
-BOTÃ“N_PRESIONADO:
-    MOVLW   0x01
-    MOVWF   BOTON_ESTADO  ; Activar la bandera de presiÃ³n del botÃ³n
-    CALL    ENCENDER_LED_Y_BUZZER
-    CALL    APAGAR_LED_Y_BUZZER
-    GOTO    LOOP
+; Rutina de interrupción del botón
+INT_BOTON:
+ BCF     INTCON, RBIF; Limpia la bandera de interrupción en RB
+ BSF     BOTON_PULSADO, 0 ; Establece la bandera de botón presionado
+ CALL    ENCENDER_ZUMBADOR_Y_LED ; Llama a la subrutina
+ RETURN
 
-ENCENDER_LED_Y_BUZZER:
-    BSF     PORTB,0       ; Encender el LED
-    BSF     PORTB,1       ; Encender el buzzer
-    MOVLW   0x64         ; Cargar el valor inicial del contador (100 decisegundos = 2 segundos)
-    MOVWF   CONTADOR
-ESPERAR:
-    DECFSZ  CONTADOR,F    ; Decrementar el contador
-    GOTO    ESPERAR
-    RETURN
+; Subrutina para encender el zumbador y el LED durante 1 segundo
+ENCENDER_ZUMBADOR_Y_LED:
+ BSF     PORTC, 1    ; Enciende el zumbador (RC2)
+ BSF     PORTC, 2    ; Enciende el LED (RC3)
+ MOVLW   TIEMPO_ESPERA ; Carga el valor de tiempo de espera
+ MOVWF   TIEMPO_ESPERA_TEMP ; Guarda el valor en una variable temporal
+ESPERA:
+ DECFSZ  TIEMPO_ESPERA_TEMP, F ; Decrementa el contador de tiempo
+ GOTO    ESPERA      ; Repite si no se ha alcanzado el tiempo
+ BCF     PORTC, 1    ; Apaga el zumbador
+ BCF     PORTC, 2    ; Apaga el LED
+ BCF     BOTON_PULSADO, 0 ; Limpia la bandera de botón presionado
+ RETURN
 
-APAGAR_LED_Y_BUZZER:
-    BCF     PORTB,0       ; Apagar el LED
-    BCF     PORTB,1       ; Apagar el buzzer
-    RETURN
+ END
 
-    END
+#claude
