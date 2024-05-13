@@ -1,5 +1,4 @@
-
-   #pragma orgall 0x0005
+#pragma orgall 0x0005
   void main(){  
        
        TRISB=0;//CONFIGURAMOS EL PUERTO CERO COMO SALIDA

@@ -1,24 +1,14 @@
-MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  19:56:55         PAGE  1
+MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  21:52:11         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-Error[122]  : Illegal opcode (Codigo)
-                      00001 # Codigo ASM para el microcontrolador PIC16F877A que 
-Error[122]  : Illegal opcode (enciende)
-                      00002 # enciende un zumbador y un LED durante 1 segundo cuando se pulsa un boton.
-Error[122]  : Illegal opcode (El)
-                      00003 # El codigo utiliza una interrupcion externa para detectar el boton pulsado 
-Error[122]  : Illegal opcode (y)
-                      00004 # y una subrutina de espera para esperar 1 segundo antes de apagar el zumbador 
-Error[122]  : Illegal opcode (y)
-                      00005 # y el LED. Se esta usando para hacer el build MPLAB V8.92 
-                      00006 
+                      00001 ; Procesador utilizado
 Warning[205]: Found directive in column 1. (processor)
-                      00007 processor pic16f877a
+                      00002 processor PIC16f877A
 Warning[205]: Found directive in column 1. (include)
-                      00008 include <p16f877a.inc> 
+                      00003 include <p16f877A.inc>
                       00001         LIST
                       00002 
                       00003 ;==========================================================================
@@ -28,75 +18,73 @@ Warning[205]: Found directive in column 1. (include)
                       00007 ;==========================================================================
                       00008 
                       00566         LIST
-                      00009 
-                      00010 ; Definicion de variables y constantes
-  00000001            00011 pinBoton    equ RC1    ; Puerto de entrada para el boton pulsado (RC1)
-  00000002            00012 pinZumbador equ RC2    ; Puerto de salida para el zumbador (RC2)
-  00000003            00013 pinLED      equ RC3    ; Puerto de salida para el LED (RC3)
-                      00014 
-                      00015 
+                      00004 
+                      00005 ; Definici?n de variables y constantes
+  00000001            00006 pinBoton    equ RC1    ; Puerto de entrada para el boton pulsado (RC1)
+  00000002            00007 pinZumbador equ RC2    ; Puerto de salida para el zumbador (RC2)
+  00000003            00008 pinLED      equ RC3    ; Puerto de salida para el LED (RC3)
+  00000025            00009 COUNT equ 0x25
+                      00010 
+                      00011 ; Direccion de inicio del programa
 Warning[205]: Found directive in column 1. (org)
-0000                  00016 org 0H ;Carga al vector RESET la direccion de la etiqueta inicio
+0000                  00012 org 0H
+                      00013 
+                      00014 ; Vector de reset que dirige a la etiqueta 'inicio'
 Warning[203]: Found opcode in column 1. (goto)
-0000   2805           00017 goto inicio
-                      00018 
+0000   2804           00015 goto inicio
+                      00016 
+                      00017 ; Direcci?n de la interrupci?n
 Warning[205]: Found directive in column 1. (org)
-0005                  00019 org 5H; Direccion de inicio del programa
-0005                  00020 inicio:
-                      00021     ; Configuracion inicial de puertos
-0005   0187           00022     clrf PORTC          ; Limpia el puerto C
-0006   1683           00023     bsf STATUS, RP0     ; Cambia al banco de registros 1
-0007   1303           00024     BCF STATUS, RP1     ; Cambia al banco de registros 1
-0008   3002           00025     movlw B'00000010'   ; Configura todos los pines de PORTC como salidas
-                      00026                         ; excepto el pin del boton (RC1)
+0004                  00018 org 4 
+                      00019     ; En este espacio se manejaria la interrupcion del boton, pero se ha omitido en este ejemplo
+                      00020 
+                      00021 ; Definicion de la etiqueta de inicio del programa
+0004                  00022 inicio:
+                      00023     ; Configuracion inicial de puertos
+0004   0187           00024     clrf PORTC              ; Limpia el puerto C
+0005   1683           00025     bsf STATUS, RP0         ; Cambia al banco de registros 1
+0006   1303           00026     BCF STATUS, RP1         ; Cambia al banco de registros 1
+0007   3002           00027     movlw B'00000010'       ; Configura todos los pines de PORTC como salidas
+                      00028                             ; excepto el pin del boton (RC1)
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0009   0087           00027     movwf TRISC         ; Registro TRISB como salidas
-000A   1283           00028     bcf STATUS, RP0     ; Vuelve al banco de registros 0 
-000B   280C           00029     goto bucle_boton ; se llama el bucle_boton para detectar el boton pulsado y actuar en ello
-                      00030  
-                      00031  
-000C                  00032 bucle_boton:
-                      00033  
-MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  19:56:55         PAGE  2
+0008   0087           00029     movwf TRISC             ; Registro TRISB como salidas
+0009   1283           00030     bcf STATUS, RP0         ; Vuelve al banco de registros 0 
+000A   280B           00031     goto bucle_boton        ; Se llama el bucle_boton para detectar el boton pulsado y actuar en ello
+                      00032 
+                      00033 ; Bucle para verificar el estado del boton
+000B                  00034 bucle_boton:
+                      00035     ; Verifica si el boton ha sido pulsado (si esta en 0)
+000B   1887           00036     btfsc PORTC, pinBoton  
+000C   280B           00037     goto bucle_boton       ; Si no se ha pulsado, vuelve a revisar el boton
+                      00038 
+MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  21:52:11         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00034     ; Ejemplo: si se presiona el botón, enciende el LED y el zumbador durante un segundo
-000C   1887           00035     btfsc PORTC, pinBoton  ; Verifica si el botón ha sido pulsado (si está en 0)
-000D   280C           00036     goto bucle_boton  ; Si no se ha pulsado, vuelve a revisar el botón
-                      00037 
-000E   1507           00038     bsf PORTC, pinZumbador  ; Enciende el zumbador
-000F   1587           00039     bsf PORTC, pinLED      ; Enciende el LED
-0010   2014           00040     call espera_1_segundo  ; Espera 1 segundo
-0011   1107           00041     bcf PORTC, pinZumbador  ; Apaga el zumbador después de 1 segundo
-0012   1187           00042     bcf PORTC, pinLED      ; Apaga el LED después de 1 segundo
-                      00043 
-0013   280C           00044     goto bucle_boton  ; Vuelve al inicio del bucle_boton principal
-                      00045  
-                      00046 ; Funcion de manejo de interrupcion para el boton pulsado
-                      00047 ;org 4
-0014                  00048 espera_1_segundo:
-0014   30FA           00049     movlw d'250'        ; Se carga el valor 250 en W
-Error[113]  : Symbol not previously defined (COUNT)
-0015   0080           00050     movwf COUNT         ; Se asigna el valor a un contador
-                      00051 
-                      00052     ; Subrutina para generar un retardo de aproximadamente 1 segundo
-0016   30FA           00053     movlw d'250'        ; Valor para un retardo de aproximadamente 1 segundo
-Error[113]  : Symbol not previously defined (COUNT)
-0017   0080           00054     movwf COUNT         ; Asigna el valor a COUNT
-0018   2019           00055     call ciclo_retardo  ; Llama a la subrutina de retardo
-                      00056 
-0019                  00057 ciclo_retardo:
-Error[113]  : Symbol not previously defined (COUNT)
-0019   0B80           00058     decfsz COUNT, f     ; Decrementa el contador y salta si es cero
-001A   2819           00059     goto ciclo_retardo  ; Continúa el bucle si el contador no es cero
-001B   3400           00060     retlw 0             ; Retorna al finalizar el retardo
-                      00061 
-                      00062   
-Error[129]  : Expected (END)
-MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  19:56:55         PAGE  3
+                      00039     ; Enciende el zumbador y el LED
+000D   1507           00040     bsf PORTC, pinZumbador 
+000E   1587           00041     bsf PORTC, pinLED      
+000F   2013           00042     call espera_1_segundo  ; Espera 1 segundo
+0010   1107           00043     bcf PORTC, pinZumbador ; Apaga el zumbador despues de 1 segundo
+0011   1187           00044     bcf PORTC, pinLED      ; Apaga el LED despues de 1 segundo
+0012   280B           00045     goto bucle_boton       ; Vuelve al inicio del bucle_boton principal
+                      00046 
+                      00047 ; Subrutina para esperar 1 segundo
+0013                  00048 espera_1_segundo:
+                      00049     ; Carga el valor 250 en W
+0013   30FA           00050     movlw d'250'        
+0014   00A5           00051     movwf COUNT          ; Asigna el valor a un contador
+                      00052 
+0015                  00053 ciclo_retardo:
+                      00054     ; Decrementa el contador y salta si es cero
+0015   0BA5           00055     decfsz COUNT, f     
+0016   2815           00056     goto ciclo_retardo  ; Continua el bucle si el contador no es cero
+0017   3400           00057     retlw 0             ; Retorna al finalizar el retardo
+Warning[205]: Found directive in column 1. (end)
+                      00058 end
+MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  21:52:11         PAGE  3
 
 
 SYMBOL TABLE
@@ -155,7 +143,7 @@ CHS1                              00000004
 CHS2                              00000005
 CIS                               00000003
 CKE                               00000006
-MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  19:56:55         PAGE  4
+MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  21:52:11         PAGE  4
 
 
 SYMBOL TABLE
@@ -168,6 +156,7 @@ CM2                               00000002
 CMCON                             0000009C
 CMIE                              00000006
 CMIF                              00000006
+COUNT                             00000025
 CREN                              00000004
 CSRC                              00000007
 CVR0                              00000000
@@ -213,13 +202,13 @@ INTEDG                            00000006
 INTF                              00000001
 IRP                               00000007
 NOT_A                             00000005
-NOT_ADDRESS                       00000005
-MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  19:56:55         PAGE  5
+MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  21:52:11         PAGE  5
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+NOT_ADDRESS                       00000005
 NOT_BO                            00000000
 NOT_BOR                           00000000
 NOT_DONE                          00000002
@@ -272,13 +261,13 @@ RA5                               00000005
 RB0                               00000000
 RB1                               00000001
 RB2                               00000002
-RB3                               00000003
-MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  19:56:55         PAGE  6
+MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  21:52:11         PAGE  6
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+RB3                               00000003
 RB4                               00000004
 RB5                               00000005
 RB6                               00000006
@@ -331,13 +320,13 @@ SSPADD                            00000093
 SSPBUF                            00000013
 SSPCON                            00000014
 SSPCON2                           00000091
-SSPEN                             00000005
-MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  19:56:55         PAGE  7
+MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  21:52:11         PAGE  7
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+SSPEN                             00000005
 SSPIE                             00000003
 SSPIF                             00000003
 SSPM0                             00000000
@@ -390,13 +379,13 @@ TRISB                             00000086
 TRISB0                            00000000
 TRISB1                            00000001
 TRISB2                            00000002
-TRISB3                            00000003
-MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  19:56:55         PAGE  8
+MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  21:52:11         PAGE  8
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+TRISB3                            00000003
 TRISB4                            00000004
 TRISB5                            00000005
 TRISB6                            00000006
@@ -449,13 +438,13 @@ _CPD_OFF                          00003FFF
 _CPD_ON                           00003EFF
 _CP_ALL                           00001FFF
 _CP_OFF                           00003FFF
-_CP_ON                            00001FFF
-MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  19:56:55         PAGE  9
+MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  21:52:11         PAGE  9
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+_CP_ON                            00001FFF
 _DEBUG_OFF                        00003FFF
 _DEBUG_ON                         000037FF
 _DEVID1                           00002006
@@ -484,10 +473,10 @@ _WRT_HALF                         000039FF
 _WRT_OFF                          00003FFF
 _XT_OSC                           00003FFD
 __16F877A                         00000001
-bucle_boton                       0000000C
-ciclo_retardo                     00000019
-espera_1_segundo                  00000014
-inicio                            00000005
+bucle_boton                       0000000B
+ciclo_retardo                     00000015
+espera_1_segundo                  00000013
+inicio                            00000004
 pinBoton                          00000001
 pinLED                            00000003
 pinZumbador                       00000002
@@ -495,16 +484,22 @@ pinZumbador                       00000002
 
 MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
 
-0000 : X----XXXXXXXXXXX XXXXXXXXXXXX---- ---------------- ----------------
+0000 : X---XXXXXXXXXXXX XXXXXXXX-------- ---------------- ----------------
 
 All other memory blocks unused.
 
-Program Memory Words Used:    24
-Program Memory Words Free:  8168
+Program Memory Words Used:    21
+Program Memory Words Free:  8171
 
 
-Errors   :     9
-Warnings :     5 reported,     0 suppressed
+MPASM  5.48              PRUEBASBUZZERLED.ASM   5-5-2024  21:52:11         PAGE 10
+
+
+
+
+
+Errors   :     0
+Warnings :     6 reported,     0 suppressed
 Messages :     1 reported,     0 suppressed
 
 
