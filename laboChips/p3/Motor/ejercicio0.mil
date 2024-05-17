@@ -1,0 +1,235 @@
+_recibe_byte:
+  begin
+//ejercicio0.c,5 :: 		while(PIR1.RCIF == 0);
+L_recibe_byte_0:
+	STACK_1 <-  PIR1 & 32
+	STACK_0 <- 5
+	STACK_1 <-  STACK_1 shr STACK_0
+	if ( STACK_1 = 0) then goto L_recibe_byte_0
+L_recibe_byte_1:
+//ejercicio0.c,6 :: 		return RCREG;
+	STACK_0 <- RCREG
+	return
+  end
+
+_main:
+  begin
+//ejercicio0.c,15 :: 		int vueltas = 0;
+	main_vueltas_L0 <- 0
+//ejercicio0.c,20 :: 		TRISB = 0;
+	TRISB <- 0
+//ejercicio0.c,23 :: 		SPBRG = 129;
+	SPBRG <- 129
+//ejercicio0.c,24 :: 		TXSTA.BRGH = 1;
+	TXSTA <-  TXSTA | 4
+//ejercicio0.c,27 :: 		TXSTA.SYNC = 0; //modo asincrono
+	TXSTA <-  TXSTA & -17
+//ejercicio0.c,28 :: 		RCSTA.SPEN = 1;
+	RCSTA <-  RCSTA | 128
+//ejercicio0.c,31 :: 		TXSTA.TXEN = 1;
+	TXSTA <-  TXSTA | 32
+//ejercicio0.c,32 :: 		RCSTA.CREN = 1;
+	RCSTA <-  RCSTA | 16
+//ejercicio0.c,34 :: 		while (1){
+L_main_2:
+//ejercicio0.c,35 :: 		dato = recibe_byte();
+	CALL _recibe_byte
+	main_dato_L0 <- STACK_0
+//ejercicio0.c,36 :: 		while(PIR1.RCIF == 0){
+L_main_4:
+	STACK_2 <-  PIR1 & 32
+	STACK_0 <- 5
+	STACK_2 <-  STACK_2 shr STACK_0
+	if ( STACK_2 != 0) then goto L_main_5
+//ejercicio0.c,37 :: 		if (dato == '1'){
+	if ( main_dato_L0 != 49) then goto L_main_6
+//ejercicio0.c,38 :: 		for(i=0; i < 4; i ++){
+	main_i_L0 <- 0
+L_main_7:
+	if ( main_i_L0 >= 4) then goto L_main_8
+//ejercicio0.c,39 :: 		PORTB = valores[i];
+	FSR <-  0 + main_i_L0
+	PORTB <- *FSR
+	PORTB <- PORTB
+//ejercicio0.c,40 :: 		delay_ms(5);
+	asm: MOVLW	33
+	asm: MOVWF	STACK_11
+	asm: MOVLW	255
+	asm: MOVWF	STACK_10
+	asm: DECFSZ	STACK_11,F
+	asm: GOTO	$+2
+	asm: GOTO	$+4
+	asm: DECFSZ	STACK_10,F
+	asm: GOTO	$-1
+	asm: GOTO	$-5
+	asm: MOVLW	96
+	asm: MOVWF	STACK_10
+	asm: DECFSZ	STACK_10,F
+	asm: GOTO	$-1
+	asm: nop
+	asm: nop
+//ejercicio0.c,41 :: 		}
+L_main_9:
+//ejercicio0.c,38 :: 		for(i=0; i < 4; i ++){
+	main_i_L0 <-  main_i_L0 + 1
+	main_i_L0 <- main_i_L0
+//ejercicio0.c,41 :: 		}
+	goto	L_main_7
+L_main_8:
+//ejercicio0.c,42 :: 		}
+L_main_6:
+//ejercicio0.c,44 :: 		if (dato == '2'){
+	if ( main_dato_L0 != 50) then goto L_main_10
+//ejercicio0.c,45 :: 		for(i=3; i > -1; i --){
+	main_i_L0 <- 3
+L_main_11:
+	if ( main_i_L0 <= -1) then goto L_main_12
+//ejercicio0.c,46 :: 		PORTB = valores[i];
+	FSR <-  0 + main_i_L0
+	PORTB <- *FSR
+	PORTB <- PORTB
+//ejercicio0.c,47 :: 		delay_ms(5);
+	asm: MOVLW	33
+	asm: MOVWF	STACK_11
+	asm: MOVLW	255
+	asm: MOVWF	STACK_10
+	asm: DECFSZ	STACK_11,F
+	asm: GOTO	$+2
+	asm: GOTO	$+4
+	asm: DECFSZ	STACK_10,F
+	asm: GOTO	$-1
+	asm: GOTO	$-5
+	asm: MOVLW	96
+	asm: MOVWF	STACK_10
+	asm: DECFSZ	STACK_10,F
+	asm: GOTO	$-1
+	asm: nop
+	asm: nop
+//ejercicio0.c,48 :: 		}
+L_main_13:
+//ejercicio0.c,45 :: 		for(i=3; i > -1; i --){
+	main_i_L0 <-  main_i_L0 - 1
+	main_i_L0 <- main_i_L0
+//ejercicio0.c,48 :: 		}
+	goto	L_main_11
+L_main_12:
+//ejercicio0.c,49 :: 		}
+L_main_10:
+//ejercicio0.c,51 :: 		if (dato == '3'){
+	if ( main_dato_L0 != 51) then goto L_main_14
+//ejercicio0.c,52 :: 		dir = recibe_byte();
+	CALL _recibe_byte
+	main_dir_L0 <- STACK_0
+//ejercicio0.c,53 :: 		vueltas = recibe_byte() - 48;
+	CALL _recibe_byte
+	main_vueltas_L0 <-  STACK_0 - 48
+	main_vueltas_L0 <- main_vueltas_L0
+//ejercicio0.c,54 :: 		if (dir == '1'){
+	if ( main_dir_L0 != 49) then goto L_main_15
+//ejercicio0.c,55 :: 		for(n = 0; n < 520 * vueltas; n++){
+	main_n_L0 <- 0
+L_main_16:
+	STACK_0 <-  520 * main_vueltas_L0
+	if ( main_n_L0 >= STACK_0) then goto L_main_17
+//ejercicio0.c,56 :: 		for(i=0; i < 4; i ++){
+	main_i_L0 <- 0
+L_main_19:
+	if ( main_i_L0 >= 4) then goto L_main_20
+//ejercicio0.c,57 :: 		PORTB = valores[i];
+	FSR <-  0 + main_i_L0
+	PORTB <- *FSR
+	PORTB <- PORTB
+//ejercicio0.c,58 :: 		delay_ms(5);
+	asm: MOVLW	33
+	asm: MOVWF	STACK_11
+	asm: MOVLW	255
+	asm: MOVWF	STACK_10
+	asm: DECFSZ	STACK_11,F
+	asm: GOTO	$+2
+	asm: GOTO	$+4
+	asm: DECFSZ	STACK_10,F
+	asm: GOTO	$-1
+	asm: GOTO	$-5
+	asm: MOVLW	96
+	asm: MOVWF	STACK_10
+	asm: DECFSZ	STACK_10,F
+	asm: GOTO	$-1
+	asm: nop
+	asm: nop
+//ejercicio0.c,59 :: 		}
+L_main_21:
+//ejercicio0.c,56 :: 		for(i=0; i < 4; i ++){
+	main_i_L0 <-  main_i_L0 + 1
+	main_i_L0 <- main_i_L0
+//ejercicio0.c,59 :: 		}
+	goto	L_main_19
+L_main_20:
+//ejercicio0.c,60 :: 		}
+L_main_18:
+//ejercicio0.c,55 :: 		for(n = 0; n < 520 * vueltas; n++){
+	main_n_L0 <-  main_n_L0 + 1
+	main_n_L0 <- main_n_L0
+//ejercicio0.c,60 :: 		}
+	goto	L_main_16
+L_main_17:
+//ejercicio0.c,61 :: 		}
+L_main_15:
+//ejercicio0.c,63 :: 		if (dir == '2'){
+	if ( main_dir_L0 != 50) then goto L_main_22
+//ejercicio0.c,64 :: 		for(n = 0; n < 520 * vueltas; n++){
+	main_n_L0 <- 0
+L_main_23:
+	STACK_0 <-  520 * main_vueltas_L0
+	if ( main_n_L0 >= STACK_0) then goto L_main_24
+//ejercicio0.c,65 :: 		for(i=3; i > -1; i --){
+	main_i_L0 <- 3
+L_main_26:
+	if ( main_i_L0 <= -1) then goto L_main_27
+//ejercicio0.c,66 :: 		PORTB = valores[i];
+	FSR <-  0 + main_i_L0
+	PORTB <- *FSR
+	PORTB <- PORTB
+//ejercicio0.c,67 :: 		delay_ms(5);
+	asm: MOVLW	33
+	asm: MOVWF	STACK_11
+	asm: MOVLW	255
+	asm: MOVWF	STACK_10
+	asm: DECFSZ	STACK_11,F
+	asm: GOTO	$+2
+	asm: GOTO	$+4
+	asm: DECFSZ	STACK_10,F
+	asm: GOTO	$-1
+	asm: GOTO	$-5
+	asm: MOVLW	96
+	asm: MOVWF	STACK_10
+	asm: DECFSZ	STACK_10,F
+	asm: GOTO	$-1
+	asm: nop
+	asm: nop
+//ejercicio0.c,68 :: 		}
+L_main_28:
+//ejercicio0.c,65 :: 		for(i=3; i > -1; i --){
+	main_i_L0 <-  main_i_L0 - 1
+	main_i_L0 <- main_i_L0
+//ejercicio0.c,68 :: 		}
+	goto	L_main_26
+L_main_27:
+//ejercicio0.c,69 :: 		}
+L_main_25:
+//ejercicio0.c,64 :: 		for(n = 0; n < 520 * vueltas; n++){
+	main_n_L0 <-  main_n_L0 + 1
+	main_n_L0 <- main_n_L0
+//ejercicio0.c,69 :: 		}
+	goto	L_main_23
+L_main_24:
+//ejercicio0.c,70 :: 		}
+L_main_22:
+//ejercicio0.c,71 :: 		}
+L_main_14:
+//ejercicio0.c,73 :: 		}
+	goto	L_main_4
+L_main_5:
+//ejercicio0.c,90 :: 		}
+	goto	L_main_2
+  end
+

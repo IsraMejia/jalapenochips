@@ -33,12 +33,12 @@ L_main3:
 L__main61:
 	BTFSC      STATUS+0, 0
 	GOTO       L_main4
-	BCF        PORTC+0, 1
-	BCF        PORTB+0, 1
-	BCF        PORTB+0, 0
 	BCF        PORTC+0, 2
+	BCF        PORTC+0, 1
 	BCF        PORTB+0, 3
 	BCF        PORTB+0, 2
+	BCF        PORTB+0, 1
+	BCF        PORTB+0, 0
 	MOVLW      3
 	MOVWF      R11+0
 	MOVLW      138
@@ -64,7 +64,7 @@ L_main4:
 	GOTO       L_main7
 L_main2:
 	MOVF       R2+0, 0
-	XORLW      1
+	XORLW      8
 	BTFSS      STATUS+0, 2
 	GOTO       L_main8
 	CLRF       _i+0
@@ -82,12 +82,12 @@ L_main9:
 L__main62:
 	BTFSC      STATUS+0, 0
 	GOTO       L_main10
-	BCF        PORTC+0, 1
-	BCF        PORTB+0, 1
-	BCF        PORTB+0, 0
 	BSF        PORTC+0, 2
+	BCF        PORTC+0, 1
 	BCF        PORTB+0, 3
-	BSF        PORTB+0, 2
+	BCF        PORTB+0, 2
+	BCF        PORTB+0, 1
+	BSF        PORTB+0, 0
 	MOVLW      3
 	MOVWF      R11+0
 	MOVLW      138
@@ -113,7 +113,7 @@ L_main10:
 	GOTO       L_main13
 L_main8:
 	MOVF       R2+0, 0
-	XORLW      2
+	XORLW      7
 	BTFSS      STATUS+0, 2
 	GOTO       L_main14
 	CLRF       _i+0
@@ -131,12 +131,12 @@ L_main15:
 L__main63:
 	BTFSC      STATUS+0, 0
 	GOTO       L_main16
-	BCF        PORTC+0, 1
-	BCF        PORTB+0, 1
-	BCF        PORTB+0, 0
 	BSF        PORTC+0, 2
-	BSF        PORTB+0, 3
+	BCF        PORTC+0, 1
+	BCF        PORTB+0, 3
 	BCF        PORTB+0, 2
+	BSF        PORTB+0, 1
+	BCF        PORTB+0, 0
 	MOVLW      3
 	MOVWF      R11+0
 	MOVLW      138
@@ -162,7 +162,7 @@ L_main16:
 	GOTO       L_main19
 L_main14:
 	MOVF       R2+0, 0
-	XORLW      3
+	XORLW      6
 	BTFSS      STATUS+0, 2
 	GOTO       L_main20
 	CLRF       _i+0
@@ -180,12 +180,12 @@ L_main21:
 L__main64:
 	BTFSC      STATUS+0, 0
 	GOTO       L_main22
-	BSF        PORTC+0, 1
-	BCF        PORTB+0, 1
-	BSF        PORTB+0, 0
 	BCF        PORTC+0, 2
+	BSF        PORTC+0, 1
 	BCF        PORTB+0, 3
 	BCF        PORTB+0, 2
+	BSF        PORTB+0, 1
+	BSF        PORTB+0, 0
 	MOVLW      3
 	MOVWF      R11+0
 	MOVLW      138
@@ -211,7 +211,7 @@ L_main22:
 	GOTO       L_main25
 L_main20:
 	MOVF       R2+0, 0
-	XORLW      4
+	XORLW      5
 	BTFSS      STATUS+0, 2
 	GOTO       L_main26
 	CLRF       _i+0
@@ -229,12 +229,12 @@ L_main27:
 L__main65:
 	BTFSC      STATUS+0, 0
 	GOTO       L_main28
-	BSF        PORTC+0, 1
-	BSF        PORTB+0, 1
-	BCF        PORTB+0, 0
 	BCF        PORTC+0, 2
+	BSF        PORTC+0, 1
 	BCF        PORTB+0, 3
-	BCF        PORTB+0, 2
+	BSF        PORTB+0, 2
+	BCF        PORTB+0, 1
+	BCF        PORTB+0, 0
 	MOVLW      3
 	MOVWF      R11+0
 	MOVLW      138
@@ -260,7 +260,7 @@ L_main28:
 	GOTO       L_main31
 L_main26:
 	MOVF       R2+0, 0
-	XORLW      5
+	XORLW      4
 	BTFSS      STATUS+0, 2
 	GOTO       L_main32
 	CLRF       _i+0
@@ -278,12 +278,12 @@ L_main33:
 L__main66:
 	BTFSC      STATUS+0, 0
 	GOTO       L_main34
-	BSF        PORTC+0, 1
-	BCF        PORTB+0, 1
-	BSF        PORTB+0, 0
 	BSF        PORTC+0, 2
+	BSF        PORTC+0, 1
 	BCF        PORTB+0, 3
 	BSF        PORTB+0, 2
+	BCF        PORTB+0, 1
+	BSF        PORTB+0, 0
 	MOVLW      3
 	MOVWF      R11+0
 	MOVLW      138
@@ -309,7 +309,7 @@ L_main34:
 	GOTO       L_main37
 L_main32:
 	MOVF       R2+0, 0
-	XORLW      6
+	XORLW      3
 	BTFSS      STATUS+0, 2
 	GOTO       L_main38
 	CLRF       _i+0
@@ -327,12 +327,12 @@ L_main39:
 L__main67:
 	BTFSC      STATUS+0, 0
 	GOTO       L_main40
+	BSF        PORTC+0, 2
 	BSF        PORTC+0, 1
+	BCF        PORTB+0, 3
+	BSF        PORTB+0, 2
 	BSF        PORTB+0, 1
 	BCF        PORTB+0, 0
-	BSF        PORTC+0, 2
-	BSF        PORTB+0, 3
-	BCF        PORTB+0, 2
 	MOVLW      3
 	MOVWF      R11+0
 	MOVLW      138
@@ -358,7 +358,7 @@ L_main40:
 	GOTO       L_main43
 L_main38:
 	MOVF       R2+0, 0
-	XORLW      7
+	XORLW      2
 	BTFSS      STATUS+0, 2
 	GOTO       L_main44
 	CLRF       _i+0
@@ -376,12 +376,12 @@ L_main45:
 L__main68:
 	BTFSC      STATUS+0, 0
 	GOTO       L_main46
-	BSF        PORTC+0, 1
-	BCF        PORTB+0, 1
-	BSF        PORTB+0, 0
 	BSF        PORTC+0, 2
-	BSF        PORTB+0, 3
-	BCF        PORTB+0, 2
+	BSF        PORTC+0, 1
+	BCF        PORTB+0, 3
+	BSF        PORTB+0, 2
+	BSF        PORTB+0, 1
+	BSF        PORTB+0, 0
 	MOVLW      3
 	MOVWF      R11+0
 	MOVLW      138
@@ -407,7 +407,7 @@ L_main46:
 	GOTO       L_main49
 L_main44:
 	MOVF       R2+0, 0
-	XORLW      8
+	XORLW      1
 	BTFSS      STATUS+0, 2
 	GOTO       L_main50
 	CLRF       _i+0
@@ -425,12 +425,12 @@ L_main51:
 L__main69:
 	BTFSC      STATUS+0, 0
 	GOTO       L_main52
-	BSF        PORTC+0, 1
-	BSF        PORTB+0, 1
-	BCF        PORTB+0, 0
 	BSF        PORTC+0, 2
-	BCF        PORTB+0, 3
-	BSF        PORTB+0, 2
+	BSF        PORTC+0, 1
+	BSF        PORTB+0, 3
+	BCF        PORTB+0, 2
+	BCF        PORTB+0, 1
+	BCF        PORTB+0, 0
 	MOVLW      3
 	MOVWF      R11+0
 	MOVLW      138
@@ -471,9 +471,9 @@ L__main70:
 	BTFSC      STATUS+0, 0
 	GOTO       L_main57
 	BCF        PORTC+0, 1
+	BCF        PORTC+0, 2
 	BCF        PORTB+0, 1
 	BCF        PORTB+0, 0
-	BCF        PORTC+0, 2
 	BCF        PORTB+0, 3
 	BCF        PORTB+0, 2
 	MOVLW      3
