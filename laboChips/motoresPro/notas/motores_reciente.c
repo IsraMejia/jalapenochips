@@ -1,5 +1,18 @@
+en base a la siguiente asignacion de pines:
+        
+        PORTC.F1 = PORTA.F2;
+        PORTB.F1 = PORTA.F1;
+        PORTB.F0 = PORTA.F0;
 
-int i = 0; // Declaramos la variable i como global
+        // motor 2
+        PORTC.F2 = PORTA.F5;
+        PORTB.F3 = PORTA.F4;
+        PORTB.F2 = PORTA.F3;
+
+Modifica el codigo para que haga cada uno de los casos de la tabla que te pasare en una imagen
+
+
+int i; // Declaramos la variable i como global
 
 void main() {
     // Configurar puerto A como entrada
@@ -27,7 +40,6 @@ void main() {
                 PORTB.F2 = 0;
                 Delay_ms(100); // Retardo para observar el efecto
             }
-            i=0;
         } else if (porta_value == 0x01) {
             // Parar Motor 1, Motor 2 horario
             for (i = 0; i < 10; i++) {
@@ -40,7 +52,6 @@ void main() {
                 PORTB.F2 = 1; // DIR2 M2
                 Delay_ms(100); // Retardo para observar el efecto
             }
-            i=0;
         } else if (porta_value == 0x02) {
             // Parar Motor 1, Motor 2 antihorario
             for (i = 0; i < 10; i++) {
@@ -53,7 +64,6 @@ void main() {
                 PORTB.F2 = 0; // DIR2 M2
                 Delay_ms(100); // Retardo para observar el efecto
             }
-            i=0;
         } else if (porta_value == 0x03) {
             // Motor 1 horario, Parar Motor 2
             for (i = 0; i < 10; i++) {
@@ -66,7 +76,6 @@ void main() {
                 PORTB.F2 = 0;
                 Delay_ms(100); // Retardo para observar el efecto
             }
-            i=0;
         } else if (porta_value == 0x04) {
             // Motor 1 antihorario, Parar Motor 2
             for (i = 0; i < 10; i++) {
@@ -79,7 +88,6 @@ void main() {
                 PORTB.F2 = 0;
                 Delay_ms(100); // Retardo para observar el efecto
             }
-            i=0;
         } else if (porta_value == 0x05) {
             // Motor 1 horario, Motor 2 horario
             for (i = 0; i < 10; i++) {
@@ -92,7 +100,6 @@ void main() {
                 PORTB.F2 = 1; // DIR2 M2
                 Delay_ms(100); // Retardo para observar el efecto
             }
-            i=0;
         } else if (porta_value == 0x06) {
             // Motor 1 antihorario, Motor 2 antihorario
             for (i = 0; i < 10; i++) {
@@ -105,7 +112,6 @@ void main() {
                 PORTB.F2 = 0; // DIR2 M2
                 Delay_ms(100); // Retardo para observar el efecto
             }
-            i=0;
         } else if (porta_value == 0x07) {
             // Motor 1 horario, Motor 2 antihorario
             for (i = 0; i < 10; i++) {
@@ -118,7 +124,6 @@ void main() {
                 PORTB.F2 = 0; // DIR2 M2
                 Delay_ms(100); // Retardo para observar el efecto
             }
-            i=0;
         } else if (porta_value == 0x08) {
             // Motor 1 antihorario, Motor 2 horario
             for (i = 0; i < 10; i++) {
@@ -131,7 +136,6 @@ void main() {
                 PORTB.F2 = 1; // DIR2 M2
                 Delay_ms(100); // Retardo para observar el efecto
             }
-            i=0;
         } else {
             // Caso no definido: Parar ambos motores
             for (i = 0; i < 10; i++) {
@@ -144,7 +148,6 @@ void main() {
                 PORTB.F2 = 0;
                 Delay_ms(100); // Retardo para observar el efecto
             }
-            i=0;
         }
     }
 }
