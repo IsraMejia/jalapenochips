@@ -1,0 +1,92 @@
+MPLINK 4.46, Linker
+Linker Map File - Created Wed May 22 11:08:33 2024
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x000002
+                   .org_2       code   0x000005    program   0x0003ea
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000000      
+                            0x000005    0x0001f9      
+            502 out of 8454 program addresses used, program memory utilization is 5%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+           ciclo_div_dec1   0x0001ad    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+           ciclo_div_dec2   0x0001a0    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+              ciclo_juego   0x0000b0    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+             ciclo_minimo   0x000173    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                  comando   0x0001ca    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                    datos   0x0001d1    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                      dos   0x0001f1    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                fin_juego   0x000105    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+            fin_recorrido   0x0000db    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                  ganador   0x000131    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                hex_a_dec   0x000198    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+       imprime_toques_dec   0x00018b    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+               inicia_lcd   0x0001b9    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                   inicio   0x000005    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+             inicio_juego   0x0000a3    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                jugadores   0x000084    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                     loop   0x0001e6    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                    loop1   0x0001e8    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                  nombres   0x00001d    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+            nuevo_jugador   0x0000ab    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+             nuevo_minimo   0x000180    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+           obtener_minimo   0x00016a    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                     ret1   0x0000c5    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                 ret100ms   0x0001ed    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                    ret1s   0x0001da    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                   ret200   0x0001e4    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                       si   0x0000c6    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                     sig1   0x000184    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                     tres   0x0001ef    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                      uno   0x0001f3    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                   inicio   0x000005    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                  nombres   0x00001d    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                jugadores   0x000084    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+             inicio_juego   0x0000a3    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+            nuevo_jugador   0x0000ab    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+              ciclo_juego   0x0000b0    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                     ret1   0x0000c5    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                       si   0x0000c6    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+            fin_recorrido   0x0000db    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                fin_juego   0x000105    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                  ganador   0x000131    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+           obtener_minimo   0x00016a    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+             ciclo_minimo   0x000173    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+             nuevo_minimo   0x000180    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                     sig1   0x000184    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+       imprime_toques_dec   0x00018b    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                hex_a_dec   0x000198    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+           ciclo_div_dec2   0x0001a0    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+           ciclo_div_dec1   0x0001ad    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+               inicia_lcd   0x0001b9    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                  comando   0x0001ca    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                    datos   0x0001d1    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                    ret1s   0x0001da    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                   ret200   0x0001e4    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                     loop   0x0001e6    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                    loop1   0x0001e8    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                 ret100ms   0x0001ed    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                     tres   0x0001ef    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                      dos   0x0001f1    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+                      uno   0x0001f3    program     static C:\Users\IsraCode\Documents\FI\2024-2\micros\jalapenochips\teoChips\feria\juego_feria.asm
+
+

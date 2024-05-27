@@ -1,0 +1,1886 @@
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[205]: Found directive in column 1. (processor)
+                      00001 processor 16f877 
+Warning[205]: Found directive in column 1. (include)
+                      00002 include<p16f877.inc>
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ;  MPASM PIC16F877 processor include
+                      00005 ; 
+                      00006 ;  (c) Copyright 1999-2012 Microchip Technology, All rights reserved
+                      00007 ;==========================================================================
+                      00008 
+Message[301]: MESSAGE: (Processor-header file mismatch.  Verify selected processor.)
+                      00540         LIST
+                      00003 
+                      00004 ; VARIABLES PARA JUEGO
+                      00005 
+  00000020            00006 valor equ h'20'
+  00000021            00007 valor1 equ h'21'
+  00000022            00008 valor2 equ h'22'
+                      00009 
+  00000023            00010 num_jugadores equ 0x23
+  00000024            00011 cont_jugador equ 0x24
+                      00012 
+  00000056            00013 cont_jugador_temp equ 0x56
+                      00014 
+  00000025            00015 cont_toques equ 0x25
+  00000027            00016 cont1 equ 0x27
+  00000028            00017 cont2 equ 0x28
+  00000029            00018 cont3 equ 0x29
+  0000002C            00019 apuntador_cont equ 0x2c
+                      00020 
+                      00021 ; VARIABLES PARA CONVERSION DE HEX A DECIMAL
+                      00022 
+  0000002D            00023 hex0 equ 0x2d ; registro a convertir a decimal
+                      00024 
+  00000033            00025 dec0 equ 0x33 ; registros donde se guardara el numero decimal
+  00000032            00026 dec1 equ 0x32
+  00000031            00027 dec2 equ 0x31
+                      00028 
+  00000052            00029 temp1 equ 0x52 ; registros utilizados en las operaciones
+  00000053            00030 temp2 equ 0x53
+  00000054            00031 cont1_dec equ 0x54
+                      00032 
+                      00033 ; VARIABLES PARA OBTENER MINIMO DE TOQUES
+  00000041            00034 cont_toques_temp equ 0x41
+  00000042            00035 minimo equ 0x42
+  00000043            00036 indice_minimo equ 0x43
+                      00037 
+                      00038 
+                      00039 
+Warning[205]: Found directive in column 1. (org)
+0000                  00040 org 0
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[203]: Found opcode in column 1. (goto)
+0000   2805           00041 goto inicio
+Warning[205]: Found directive in column 1. (org)
+0005                  00042 org 5
+                      00043 
+0005                  00044 inicio:
+Warning[203]: Found opcode in column 1. (clrf)
+0005   0185           00045 clrf PORTA
+Warning[203]: Found opcode in column 1. (clrf)
+0006   0186           00046 clrf PORTB
+Warning[203]: Found opcode in column 1. (clrf)
+0007   0188           00047 clrf PORTD
+Warning[203]: Found opcode in column 1. (clrf)
+0008   0189           00048 clrf PORTE
+                      00049 
+Warning[203]: Found opcode in column 1. (clrf)
+0009   01A5           00050 clrf cont_toques
+Warning[203]: Found opcode in column 1. (clrf)
+000A   01A7           00051 clrf cont1
+Warning[203]: Found opcode in column 1. (clrf)
+000B   01A8           00052 clrf cont2
+Warning[203]: Found opcode in column 1. (clrf)
+000C   01A9           00053 clrf cont3
+                      00054 
+Warning[203]: Found opcode in column 1. (bsf)
+000D   1683           00055 bsf STATUS,5
+Warning[203]: Found opcode in column 1. (bcf)
+000E   1303           00056 bcf STATUS,6
+                      00057 
+Warning[203]: Found opcode in column 1. (movlw)
+000F   3000           00058 movlw 0x00
+Warning[203]: Found opcode in column 1. (movwf)
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0010   0086           00059 movwf TRISB
+Warning[203]: Found opcode in column 1. (movlw)
+0011   3007           00060 movlw 0x07
+Warning[203]: Found opcode in column 1. (movwf)
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0012   009F           00061 movwf ADCON1
+Warning[203]: Found opcode in column 1. (movlw)
+0013   3000           00062 movlw 0x00 
+Warning[203]: Found opcode in column 1. (movwf)
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0014   0085           00063 movwf TRISA
+Warning[203]: Found opcode in column 1. (movlw)
+0015   3007           00064 movlw b'00000111'
+Warning[203]: Found opcode in column 1. (movwf)
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0016   0088           00065 movwf TRISD
+Warning[203]: Found opcode in column 1. (movlw)
+0017   3001           00066 movlw b'001'
+Warning[203]: Found opcode in column 1. (movwf)
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0018   0089           00067 movwf TRISE
+                      00068 
+Warning[203]: Found opcode in column 1. (bcf)
+0019   1283           00069 bcf STATUS,5
+Warning[203]: Found opcode in column 1. (call)
+001A   21B9           00070 call inicia_lcd
+Warning[203]: Found opcode in column 1. (movlw)
+001B   3080           00071 movlw 0x80
+Warning[203]: Found opcode in column 1. (call)
+001C   21CA           00072 call comando
+                      00073 
+001D                  00074 nombres:
+                      00075 
+                      00076 ; JAVIER LOIDI
+Warning[203]: Found opcode in column 1. (MOVLW)
+001D   3001           00077 MOVLW 0X01
+Warning[203]: Found opcode in column 1. (CALL)
+001E   21CA           00078 CALL comando
+Warning[203]: Found opcode in column 1. (MOVLW)
+001F   3080           00079 MOVLW 0X80 
+Warning[203]: Found opcode in column 1. (CALL)
+0020   21CA           00080 CALL comando
+Warning[203]: Found opcode in column 1. (MOVLW)
+0021   3020           00081 MOVLW A' '      
+Warning[203]: Found opcode in column 1. (CALL)
+0022   21D1           00082 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0023   304A           00083 MOVLW A'J'      
+Warning[203]: Found opcode in column 1. (CALL)
+0024   21D1           00084 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0025   3041           00085 MOVLW A'A' 
+Warning[203]: Found opcode in column 1. (CALL)
+0026   21D1           00086 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0027   3056           00087 MOVLW A'V' 
+Warning[203]: Found opcode in column 1. (CALL)
+0028   21D1           00088 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0029   3049           00089 MOVLW A'I' 
+Warning[203]: Found opcode in column 1. (CALL)
+002A   21D1           00090 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+002B   3045           00091 MOVLW A'E' 
+Warning[203]: Found opcode in column 1. (CALL)
+002C   21D1           00092 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+002D   3052           00093 MOVLW A'R' 
+Warning[203]: Found opcode in column 1. (CALL)
+002E   21D1           00094 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+002F   3020           00095 MOVLW A' ' 
+Warning[203]: Found opcode in column 1. (CALL)
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0030   21D1           00096 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0031   304C           00097 MOVLW A'L' 
+Warning[203]: Found opcode in column 1. (CALL)
+0032   21D1           00098 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0033   304F           00099 MOVLW A'O' 
+Warning[203]: Found opcode in column 1. (CALL)
+0034   21D1           00100 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0035   3049           00101 MOVLW A'I' 
+Warning[203]: Found opcode in column 1. (CALL)
+0036   21D1           00102 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0037   3044           00103 MOVLW A'D' 
+Warning[203]: Found opcode in column 1. (CALL)
+0038   21D1           00104 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0039   3049           00105 MOVLW A'I' 
+Warning[203]: Found opcode in column 1. (CALL)
+003A   21D1           00106 CALL datos 
+Warning[203]: Found opcode in column 1. (CALL)
+003B   21DA           00107 CALL ret1s
+                      00108 
+                      00109 ; JONATHAN MENDOZA
+Warning[203]: Found opcode in column 1. (MOVLW)
+003C   3001           00110 MOVLW 0X01 
+Warning[203]: Found opcode in column 1. (CALL)
+003D   21CA           00111 CALL comando
+Warning[203]: Found opcode in column 1. (MOVLW)
+003E   3080           00112 MOVLW 0X80 
+Warning[203]: Found opcode in column 1. (CALL)
+003F   21CA           00113 CALL comando
+Warning[203]: Found opcode in column 1. (MOVLW)
+0040   3020           00114 MOVLW A' '      
+Warning[203]: Found opcode in column 1. (CALL)
+0041   21D1           00115 CALL datos  
+Warning[203]: Found opcode in column 1. (MOVLW)
+0042   304A           00116 MOVLW A'J' 
+Warning[203]: Found opcode in column 1. (CALL)
+0043   21D1           00117 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0044   304F           00118 MOVLW A'O' 
+Warning[203]: Found opcode in column 1. (CALL)
+0045   21D1           00119 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0046   304E           00120 MOVLW A'N' 
+Warning[203]: Found opcode in column 1. (CALL)
+0047   21D1           00121 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0048   3041           00122 MOVLW A'A' 
+Warning[203]: Found opcode in column 1. (CALL)
+0049   21D1           00123 CALL datos 
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[203]: Found opcode in column 1. (MOVLW)
+004A   3054           00124 MOVLW A'T' 
+Warning[203]: Found opcode in column 1. (CALL)
+004B   21D1           00125 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+004C   3048           00126 MOVLW A'H' 
+Warning[203]: Found opcode in column 1. (CALL)
+004D   21D1           00127 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+004E   3041           00128 MOVLW A'A' 
+Warning[203]: Found opcode in column 1. (CALL)
+004F   21D1           00129 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0050   304E           00130 MOVLW A'N' 
+Warning[203]: Found opcode in column 1. (CALL)
+0051   21D1           00131 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0052   30C0           00132 MOVLW 0XC0 
+Warning[203]: Found opcode in column 1. (CALL)
+0053   21CA           00133 CALL comando
+Warning[203]: Found opcode in column 1. (MOVLW)
+0054   304D           00134 MOVLW A'M' 
+Warning[203]: Found opcode in column 1. (CALL)
+0055   21D1           00135 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0056   3045           00136 MOVLW A'E' 
+Warning[203]: Found opcode in column 1. (CALL)
+0057   21D1           00137 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0058   304E           00138 MOVLW A'N' 
+Warning[203]: Found opcode in column 1. (CALL)
+0059   21D1           00139 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+005A   3044           00140 MOVLW A'D' 
+Warning[203]: Found opcode in column 1. (CALL)
+005B   21D1           00141 CALL datos
+Warning[203]: Found opcode in column 1. (MOVLW)
+005C   304F           00142 MOVLW A'O' 
+Warning[203]: Found opcode in column 1. (CALL)
+005D   21D1           00143 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+005E   305A           00144 MOVLW A'Z' 
+Warning[203]: Found opcode in column 1. (CALL)
+005F   21D1           00145 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0060   3041           00146 MOVLW A'A' 
+Warning[203]: Found opcode in column 1. (CALL)
+0061   21D1           00147 CALL datos 
+Warning[203]: Found opcode in column 1. (CALL)
+0062   21DA           00148 CALL ret1s
+                      00149 
+                      00150 ; JESUS VAZQUEZ
+Warning[203]: Found opcode in column 1. (MOVLW)
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0063   3001           00151 MOVLW 0X01 
+Warning[203]: Found opcode in column 1. (CALL)
+0064   21CA           00152 CALL comando
+Warning[203]: Found opcode in column 1. (MOVLW)
+0065   3080           00153 MOVLW 0X80 
+Warning[203]: Found opcode in column 1. (CALL)
+0066   21CA           00154 CALL comando
+Warning[203]: Found opcode in column 1. (MOVLW)
+0067   3020           00155 MOVLW A' '      
+Warning[203]: Found opcode in column 1. (CALL)
+0068   21D1           00156 CALL datos
+Warning[203]: Found opcode in column 1. (MOVLW)
+0069   304A           00157 MOVLW A'J' 
+Warning[203]: Found opcode in column 1. (CALL)
+006A   21D1           00158 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+006B   3045           00159 MOVLW A'E' 
+Warning[203]: Found opcode in column 1. (CALL)
+006C   21D1           00160 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+006D   3053           00161 MOVLW A'S' 
+Warning[203]: Found opcode in column 1. (CALL)
+006E   21D1           00162 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+006F   3055           00163 MOVLW A'U' 
+Warning[203]: Found opcode in column 1. (CALL)
+0070   21D1           00164 CALL datos
+Warning[203]: Found opcode in column 1. (MOVLW)
+0071   3053           00165 MOVLW A'S' 
+Warning[203]: Found opcode in column 1. (CALL)
+0072   21D1           00166 CALL datos  
+Warning[203]: Found opcode in column 1. (MOVLW)
+0073   30C0           00167 MOVLW 0XC0 
+Warning[203]: Found opcode in column 1. (CALL)
+0074   21CA           00168 CALL comando
+Warning[203]: Found opcode in column 1. (MOVLW)
+0075   3056           00169 MOVLW A'V' 
+Warning[203]: Found opcode in column 1. (CALL)
+0076   21D1           00170 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0077   3041           00171 MOVLW A'A' 
+Warning[203]: Found opcode in column 1. (CALL)
+0078   21D1           00172 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0079   305A           00173 MOVLW A'Z' 
+Warning[203]: Found opcode in column 1. (CALL)
+007A   21D1           00174 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+007B   3051           00175 MOVLW A'Q' 
+Warning[203]: Found opcode in column 1. (CALL)
+007C   21D1           00176 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+007D   3055           00177 MOVLW A'U' 
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[203]: Found opcode in column 1. (CALL)
+007E   21D1           00178 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+007F   3045           00179 MOVLW A'E' 
+Warning[203]: Found opcode in column 1. (CALL)
+0080   21D1           00180 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0081   305A           00181 MOVLW A'Z' 
+Warning[203]: Found opcode in column 1. (CALL)
+0082   21D1           00182 CALL datos 
+Warning[203]: Found opcode in column 1. (CALL)
+0083   21DA           00183 CALL ret1s
+                      00184 
+0084                  00185 jugadores:
+Warning[203]: Found opcode in column 1. (MOVLW)
+0084   3001           00186 MOVLW 0X01
+Warning[203]: Found opcode in column 1. (CALL)
+0085   21CA           00187 CALL comando
+Warning[203]: Found opcode in column 1. (MOVLW)
+0086   3080           00188 MOVLW 0X80 
+Warning[203]: Found opcode in column 1. (CALL)
+0087   21CA           00189 CALL comando
+Warning[203]: Found opcode in column 1. (MOVLW)
+0088   3020           00190 MOVLW A' '      
+Warning[203]: Found opcode in column 1. (CALL)
+0089   21D1           00191 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+008A   304A           00192 MOVLW A'J' 
+Warning[203]: Found opcode in column 1. (CALL)
+008B   21D1           00193 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+008C   3055           00194 MOVLW A'U' 
+Warning[203]: Found opcode in column 1. (CALL)
+008D   21D1           00195 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+008E   3047           00196 MOVLW A'G' 
+Warning[203]: Found opcode in column 1. (CALL)
+008F   21D1           00197 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0090   3041           00198 MOVLW A'A' 
+Warning[203]: Found opcode in column 1. (CALL)
+0091   21D1           00199 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0092   3044           00200 MOVLW A'D' 
+Warning[203]: Found opcode in column 1. (CALL)
+0093   21D1           00201 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0094   304F           00202 MOVLW A'O' 
+Warning[203]: Found opcode in column 1. (CALL)
+0095   21D1           00203 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0096   3052           00204 MOVLW A'R' 
+Warning[203]: Found opcode in column 1. (CALL)
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0097   21D1           00205 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0098   3045           00206 MOVLW A'E'  
+Warning[203]: Found opcode in column 1. (CALL)
+0099   21D1           00207 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+009A   3053           00208 MOVLW A'S'  
+Warning[203]: Found opcode in column 1. (CALL)
+009B   21D1           00209 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+009C   3020           00210 MOVLW A' '  
+Warning[203]: Found opcode in column 1. (CALL)
+009D   21D1           00211 CALL datos 
+                      00212 
+Warning[203]: Found opcode in column 1. (movf)
+009E   0808           00213 movf PORTD, w
+Warning[203]: Found opcode in column 1. (movwf)
+009F   00A3           00214 movwf num_jugadores
+Warning[203]: Found opcode in column 1. (addlw)
+00A0   3E30           00215 addlw 30
+Warning[203]: Found opcode in column 1. (CALL)
+00A1   21D1           00216 CALL datos 
+Warning[203]: Found opcode in column 1. (CALL)
+00A2   21DA           00217 CALL ret1s
+                      00218 ;CALL ret1s
+                      00219 ;CALL ret1s
+                      00220 
+00A3                  00221 inicio_juego:
+Warning[203]: Found opcode in column 1. (movf)
+00A3   0823           00222 movf num_jugadores, w
+Warning[203]: Found opcode in column 1. (sublw)
+00A4   3C00           00223 sublw 0x0
+                      00224 
+Warning[203]: Found opcode in column 1. (btfsc)
+00A5   1903           00225 btfsc STATUS, Z
+Warning[203]: Found opcode in column 1. (goto)
+00A6   2905           00226 goto fin_juego
+                      00227 ;movf cont1, w
+                      00228 ;addlw 30
+                      00229 ;CALL datos
+Warning[203]: Found opcode in column 1. (clrf)
+00A7   01A4           00230 clrf cont_jugador
+                      00231 
+Warning[203]: Found opcode in column 1. (movlw)
+00A8   3026           00232 movlw 0x26
+Warning[203]: Found opcode in column 1. (movwf)
+00A9   00AC           00233 movwf apuntador_cont
+                      00234 
+Warning[203]: Found opcode in column 1. (bcf)
+00AA   1383           00235 bcf STATUS,IRP
+                      00236 
+                      00237 
+                      00238 
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00AB                  00239 nuevo_jugador:
+                      00240 
+Warning[203]: Found opcode in column 1. (clrf)
+00AB   01A5           00241 clrf cont_toques
+                      00242 
+Warning[203]: Found opcode in column 1. (incf)
+Message[305]: Using default destination of 1 (file).
+00AC   0AAC           00243 incf apuntador_cont
+Warning[203]: Found opcode in column 1. (incf)
+Message[305]: Using default destination of 1 (file).
+00AD   0AA4           00244 incf cont_jugador
+                      00245 
+Warning[203]: Found opcode in column 1. (movf)
+00AE   082C           00246 movf apuntador_cont, w
+Warning[203]: Found opcode in column 1. (movwf)
+00AF   0084           00247 movwf FSR
+                      00248 
+00B0                  00249 ciclo_juego:
+Warning[203]: Found opcode in column 1. (MOVLW)
+00B0   3001           00250 MOVLW 0X01 
+Warning[203]: Found opcode in column 1. (CALL)
+00B1   21CA           00251 CALL comando
+Warning[203]: Found opcode in column 1. (MOVLW)
+00B2   3080           00252 MOVLW 0X80 
+Warning[203]: Found opcode in column 1. (CALL)
+00B3   21CA           00253 CALL comando 
+Warning[203]: Found opcode in column 1. (MOVLW)
+00B4   3020           00254 MOVLW A' '
+Warning[203]: Found opcode in column 1. (CALL)
+00B5   21D1           00255 CALL datos
+Warning[203]: Found opcode in column 1. (MOVLW)
+00B6   304A           00256 MOVLW A'J' 
+Warning[203]: Found opcode in column 1. (CALL)
+00B7   21D1           00257 CALL datos 
+                      00258 
+                      00259 ;MOVLW A'1' 
+                      00260 ;CALL datos
+                      00261 
+Warning[203]: Found opcode in column 1. (movf)
+00B8   0824           00262 movf cont_jugador, w
+Warning[203]: Found opcode in column 1. (addlw)
+00B9   3E30           00263 addlw 30
+Warning[203]: Found opcode in column 1. (call)
+00BA   21D1           00264 call datos
+                      00265 
+                      00266  
+Warning[203]: Found opcode in column 1. (MOVLW)
+00BB   303A           00267 MOVLW A':' 
+Warning[203]: Found opcode in column 1. (CALL)
+00BC   21D1           00268 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+00BD   3020           00269 MOVLW A' '
+Warning[203]: Found opcode in column 1. (CALL)
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00BE   21D1           00270 CALL datos
+                      00271 
+Warning[203]: Found opcode in column 1. (call)
+00BF   218B           00272 call imprime_toques_dec
+                      00273 
+Warning[203]: Found opcode in column 1. (btfsc)
+00C0   1908           00274 btfsc PORTD, 2
+Warning[203]: Found opcode in column 1. (goto)
+00C1   28DB           00275 goto fin_recorrido
+                      00276 
+                      00277 
+Warning[203]: Found opcode in column 1. (btfsc)
+00C2   1809           00278 btfsc PORTE, 0
+Warning[203]: Found opcode in column 1. (goto)
+00C3   28C6           00279 goto si
+                      00280 
+                      00281 ; NO toca el cable
+Warning[203]: Found opcode in column 1. (bcf)
+00C4   1089           00282 bcf PORTE, 1
+                      00283 
+00C5                  00284 ret1:
+Warning[203]: Found opcode in column 1. (goto)
+00C5   28B0           00285 goto ciclo_juego
+                      00286 
+00C6                  00287 si:
+                      00288 ; SI toca el cable
+Warning[203]: Found opcode in column 1. (bsf)
+00C6   1489           00289 bsf PORTE, 1
+Warning[203]: Found opcode in column 1. (incf)
+Message[305]: Using default destination of 1 (file).
+00C7   0AA5           00290 incf cont_toques
+                      00291 
+Warning[203]: Found opcode in column 1. (MOVLW)
+00C8   3001           00292 MOVLW 0X01 
+Warning[203]: Found opcode in column 1. (CALL)
+00C9   21CA           00293 CALL comando
+Warning[203]: Found opcode in column 1. (MOVLW)
+00CA   3080           00294 MOVLW 0X80 
+Warning[203]: Found opcode in column 1. (CALL)
+00CB   21CA           00295 CALL comando 
+Warning[203]: Found opcode in column 1. (MOVLW)
+00CC   3020           00296 MOVLW A' '
+Warning[203]: Found opcode in column 1. (CALL)
+00CD   21D1           00297 CALL datos
+Warning[203]: Found opcode in column 1. (MOVLW)
+00CE   304A           00298 MOVLW A'J' 
+Warning[203]: Found opcode in column 1. (CALL)
+00CF   21D1           00299 CALL datos 
+                      00300 
+Warning[203]: Found opcode in column 1. (movf)
+00D0   0824           00301 movf cont_jugador, w
+Warning[203]: Found opcode in column 1. (addlw)
+00D1   3E30           00302 addlw 30
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[203]: Found opcode in column 1. (call)
+00D2   21D1           00303 call datos
+                      00304 
+Warning[203]: Found opcode in column 1. (MOVLW)
+00D3   303A           00305 MOVLW A':' 
+Warning[203]: Found opcode in column 1. (CALL)
+00D4   21D1           00306 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+00D5   3020           00307 MOVLW A' '
+Warning[203]: Found opcode in column 1. (CALL)
+00D6   21D1           00308 CALL datos
+                      00309 
+Warning[203]: Found opcode in column 1. (call)
+00D7   218B           00310 call imprime_toques_dec
+                      00311 
+Warning[203]: Found opcode in column 1. (call)
+00D8   21DA           00312 call ret1s
+Warning[203]: Found opcode in column 1. (call)
+00D9   21DA           00313 call ret1s
+                      00314 
+Warning[203]: Found opcode in column 1. (goto)
+00DA   28C5           00315 goto ret1
+                      00316 
+                      00317 
+00DB                  00318 fin_recorrido:
+Warning[203]: Found opcode in column 1. (movf)
+00DB   0825           00319 movf cont_toques, w
+Warning[203]: Found opcode in column 1. (movwf)
+00DC   0080           00320 movwf INDF
+                      00321 
+Warning[203]: Found opcode in column 1. (MOVLW)
+00DD   3001           00322 MOVLW 0X01 
+Warning[203]: Found opcode in column 1. (CALL)
+00DE   21CA           00323 CALL comando
+Warning[203]: Found opcode in column 1. (MOVLW)
+00DF   3080           00324 MOVLW 0X80 
+Warning[203]: Found opcode in column 1. (CALL)
+00E0   21CA           00325 CALL comando 
+Warning[203]: Found opcode in column 1. (MOVLW)
+00E1   3020           00326 MOVLW A' '
+Warning[203]: Found opcode in column 1. (CALL)
+00E2   21D1           00327 CALL datos
+Warning[203]: Found opcode in column 1. (MOVLW)
+00E3   304A           00328 MOVLW A'J' 
+Warning[203]: Found opcode in column 1. (CALL)
+00E4   21D1           00329 CALL datos 
+                      00330 
+Warning[203]: Found opcode in column 1. (movf)
+00E5   0824           00331 movf cont_jugador, w
+Warning[203]: Found opcode in column 1. (addlw)
+00E6   3E30           00332 addlw 30
+Warning[203]: Found opcode in column 1. (call)
+00E7   21D1           00333 call datos
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00334 
+Warning[203]: Found opcode in column 1. (MOVLW)
+00E8   303A           00335 MOVLW A':' 
+Warning[203]: Found opcode in column 1. (CALL)
+00E9   21D1           00336 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+00EA   3020           00337 MOVLW A' '
+Warning[203]: Found opcode in column 1. (CALL)
+00EB   21D1           00338 CALL datos
+Warning[203]: Found opcode in column 1. (MOVLW)
+00EC   3054           00339 MOVLW A'T' 
+Warning[203]: Found opcode in column 1. (CALL)
+00ED   21D1           00340 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+00EE   304F           00341 MOVLW A'O' 
+Warning[203]: Found opcode in column 1. (CALL)
+00EF   21D1           00342 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+00F0   3051           00343 MOVLW A'Q' 
+Warning[203]: Found opcode in column 1. (CALL)
+00F1   21D1           00344 CALL datos
+Warning[203]: Found opcode in column 1. (MOVLW)
+00F2   3055           00345 MOVLW A'U' 
+Warning[203]: Found opcode in column 1. (CALL)
+00F3   21D1           00346 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+00F4   3045           00347 MOVLW A'E' 
+Warning[203]: Found opcode in column 1. (CALL)
+00F5   21D1           00348 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+00F6   3053           00349 MOVLW A'S' 
+Warning[203]: Found opcode in column 1. (CALL)
+00F7   21D1           00350 CALL datos
+Warning[203]: Found opcode in column 1. (MOVLW)
+00F8   303A           00351 MOVLW A':' 
+Warning[203]: Found opcode in column 1. (CALL)
+00F9   21D1           00352 CALL datos
+Warning[203]: Found opcode in column 1. (MOVLW)
+00FA   3020           00353 MOVLW A' '
+Warning[203]: Found opcode in column 1. (CALL)
+00FB   21D1           00354 CALL datos
+                      00355 
+Warning[203]: Found opcode in column 1. (call)
+00FC   218B           00356 call imprime_toques_dec
+                      00357 
+Warning[203]: Found opcode in column 1. (call)
+00FD   21DA           00358 call ret1s
+Warning[203]: Found opcode in column 1. (call)
+00FE   21DA           00359 call ret1s
+                      00360 
+Warning[203]: Found opcode in column 1. (movf)
+00FF   0824           00361 movf cont_jugador, w
+Warning[203]: Found opcode in column 1. (movwf)
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE 13
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0100   00D6           00362 movwf cont_jugador_temp
+Warning[203]: Found opcode in column 1. (movf)
+0101   0823           00363 movf num_jugadores, w
+Warning[203]: Found opcode in column 1. (subwf)
+Message[305]: Using default destination of 1 (file).
+0102   02D6           00364 subwf cont_jugador_temp
+                      00365 
+Warning[203]: Found opcode in column 1. (btfss)
+0103   1D03           00366 btfss STATUS, Z
+Warning[203]: Found opcode in column 1. (goto)
+0104   28AB           00367 goto nuevo_jugador
+                      00368 
+0105                  00369 fin_juego:
+Warning[203]: Found opcode in column 1. (MOVLW)
+0105   3001           00370 MOVLW 0X01 
+Warning[203]: Found opcode in column 1. (CALL)
+0106   21CA           00371 CALL comando
+Warning[203]: Found opcode in column 1. (MOVLW)
+0107   3080           00372 MOVLW 0X80 
+Warning[203]: Found opcode in column 1. (CALL)
+0108   21CA           00373 CALL comando 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0109   3020           00374 MOVLW A' '
+Warning[203]: Found opcode in column 1. (CALL)
+010A   21D1           00375 CALL datos
+Warning[203]: Found opcode in column 1. (MOVLW)
+010B   3046           00376 MOVLW A'F' 
+Warning[203]: Found opcode in column 1. (CALL)
+010C   21D1           00377 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+010D   3049           00378 MOVLW A'I' 
+Warning[203]: Found opcode in column 1. (CALL)
+010E   21D1           00379 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+010F   304E           00380 MOVLW A'N' 
+Warning[203]: Found opcode in column 1. (CALL)
+0110   21D1           00381 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0111   3020           00382 MOVLW A' '
+Warning[203]: Found opcode in column 1. (CALL)
+0112   21D1           00383 CALL datos
+Warning[203]: Found opcode in column 1. (MOVLW)
+0113   304A           00384 MOVLW A'J' 
+Warning[203]: Found opcode in column 1. (CALL)
+0114   21D1           00385 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0115   3055           00386 MOVLW A'U' 
+Warning[203]: Found opcode in column 1. (CALL)
+0116   21D1           00387 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0117   3045           00388 MOVLW A'E' 
+Warning[203]: Found opcode in column 1. (CALL)
+0118   21D1           00389 CALL datos
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE 14
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[203]: Found opcode in column 1. (MOVLW)
+0119   3047           00390 MOVLW A'G' 
+Warning[203]: Found opcode in column 1. (CALL)
+011A   21D1           00391 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+011B   304F           00392 MOVLW A'O' 
+Warning[203]: Found opcode in column 1. (CALL)
+011C   21D1           00393 CALL datos
+Warning[203]: Found opcode in column 1. (MOVLW)
+011D   30C0           00394 MOVLW 0XC0 
+Warning[203]: Found opcode in column 1. (CALL)
+011E   21CA           00395 CALL comando
+                      00396 
+Warning[203]: Found opcode in column 1. (MOVLW)
+011F   3020           00397 MOVLW A' '
+Warning[203]: Found opcode in column 1. (CALL)
+0120   21D1           00398 CALL datos
+                      00399 
+Warning[203]: Found opcode in column 1. (movf)
+0121   0827           00400 movf cont1, w
+Warning[203]: Found opcode in column 1. (movwf)
+0122   00A5           00401 movwf cont_toques
+Warning[203]: Found opcode in column 1. (call)
+0123   218B           00402 call imprime_toques_dec
+                      00403 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0124   3020           00404 MOVLW A' '
+Warning[203]: Found opcode in column 1. (CALL)
+0125   21D1           00405 CALL datos
+                      00406 
+Warning[203]: Found opcode in column 1. (movf)
+0126   0828           00407 movf cont2, w
+Warning[203]: Found opcode in column 1. (movwf)
+0127   00A5           00408 movwf cont_toques
+Warning[203]: Found opcode in column 1. (call)
+0128   218B           00409 call imprime_toques_dec
+                      00410 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0129   3020           00411 MOVLW A' '
+Warning[203]: Found opcode in column 1. (CALL)
+012A   21D1           00412 CALL datos
+                      00413 
+Warning[203]: Found opcode in column 1. (movf)
+012B   0829           00414 movf cont3, w
+Warning[203]: Found opcode in column 1. (movwf)
+012C   00A5           00415 movwf cont_toques
+Warning[203]: Found opcode in column 1. (call)
+012D   218B           00416 call imprime_toques_dec
+                      00417 
+Warning[203]: Found opcode in column 1. (call)
+012E   21DA           00418 call ret1s
+Warning[203]: Found opcode in column 1. (call)
+012F   21DA           00419 call ret1s
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE 15
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[203]: Found opcode in column 1. (call)
+0130   21DA           00420 call ret1s
+                      00421 
+                      00422 
+0131                  00423 ganador:
+                      00424 
+Warning[203]: Found opcode in column 1. (call)
+0131   216A           00425 call obtener_minimo
+                      00426 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0132   3001           00427 MOVLW 0X01 
+Warning[203]: Found opcode in column 1. (CALL)
+0133   21CA           00428 CALL comando
+Warning[203]: Found opcode in column 1. (MOVLW)
+0134   3080           00429 MOVLW 0X80 
+Warning[203]: Found opcode in column 1. (CALL)
+0135   21CA           00430 CALL comando 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0136   3020           00431 MOVLW A' '
+Warning[203]: Found opcode in column 1. (CALL)
+0137   21D1           00432 CALL datos
+Warning[203]: Found opcode in column 1. (MOVLW)
+0138   3047           00433 MOVLW A'G' 
+Warning[203]: Found opcode in column 1. (CALL)
+0139   21D1           00434 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+013A   3041           00435 MOVLW A'A' 
+Warning[203]: Found opcode in column 1. (CALL)
+013B   21D1           00436 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+013C   304E           00437 MOVLW A'N' 
+Warning[203]: Found opcode in column 1. (CALL)
+013D   21D1           00438 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+013E   3041           00439 MOVLW A'A'
+Warning[203]: Found opcode in column 1. (CALL)
+013F   21D1           00440 CALL datos
+Warning[203]: Found opcode in column 1. (MOVLW)
+0140   3044           00441 MOVLW A'D' 
+Warning[203]: Found opcode in column 1. (CALL)
+0141   21D1           00442 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0142   304F           00443 MOVLW A'O' 
+Warning[203]: Found opcode in column 1. (CALL)
+0143   21D1           00444 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0144   3052           00445 MOVLW A'R' 
+Warning[203]: Found opcode in column 1. (CALL)
+0145   21D1           00446 CALL datos
+Warning[203]: Found opcode in column 1. (MOVLW)
+0146   303A           00447 MOVLW A':' 
+Warning[203]: Found opcode in column 1. (CALL)
+0147   21D1           00448 CALL datos 
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE 16
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[203]: Found opcode in column 1. (MOVLW)
+0148   3020           00449 MOVLW A' ' 
+Warning[203]: Found opcode in column 1. (CALL)
+0149   21D1           00450 CALL datos
+Warning[203]: Found opcode in column 1. (MOVLW)
+014A   304A           00451 MOVLW A'J' 
+Warning[203]: Found opcode in column 1. (CALL)
+014B   21D1           00452 CALL datos 
+                      00453 
+Warning[203]: Found opcode in column 1. (movf)
+014C   0843           00454 movf indice_minimo, w
+Warning[203]: Found opcode in column 1. (addlw)
+014D   3E30           00455 addlw 30
+Warning[203]: Found opcode in column 1. (call)
+014E   21D1           00456 call datos
+                      00457 
+Warning[203]: Found opcode in column 1. (MOVLW)
+014F   30C0           00458 MOVLW 0XC0 
+Warning[203]: Found opcode in column 1. (CALL)
+0150   21CA           00459 CALL comando
+                      00460 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0151   3020           00461 MOVLW A' ' 
+Warning[203]: Found opcode in column 1. (CALL)
+0152   21D1           00462 CALL datos
+Warning[203]: Found opcode in column 1. (MOVLW)
+0153   3020           00463 MOVLW A' ' 
+Warning[203]: Found opcode in column 1. (CALL)
+0154   21D1           00464 CALL datos
+                      00465 
+Warning[203]: Found opcode in column 1. (movf)
+0155   0842           00466 movf minimo, w
+Warning[203]: Found opcode in column 1. (movwf)
+0156   00A5           00467 movwf cont_toques
+Warning[203]: Found opcode in column 1. (call)
+0157   218B           00468 call imprime_toques_dec
+                      00469 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0158   3020           00470 MOVLW A' ' 
+Warning[203]: Found opcode in column 1. (CALL)
+0159   21D1           00471 CALL datos
+Warning[203]: Found opcode in column 1. (MOVLW)
+015A   3054           00472 MOVLW A'T' 
+Warning[203]: Found opcode in column 1. (CALL)
+015B   21D1           00473 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+015C   304F           00474 MOVLW A'O' 
+Warning[203]: Found opcode in column 1. (CALL)
+015D   21D1           00475 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+015E   3051           00476 MOVLW A'Q' 
+Warning[203]: Found opcode in column 1. (CALL)
+015F   21D1           00477 CALL datos 
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE 17
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[203]: Found opcode in column 1. (MOVLW)
+0160   3055           00478 MOVLW A'U'
+Warning[203]: Found opcode in column 1. (CALL)
+0161   21D1           00479 CALL datos
+Warning[203]: Found opcode in column 1. (MOVLW)
+0162   3045           00480 MOVLW A'E' 
+Warning[203]: Found opcode in column 1. (CALL)
+0163   21D1           00481 CALL datos 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0164   3053           00482 MOVLW A'S' 
+Warning[203]: Found opcode in column 1. (CALL)
+0165   21D1           00483 CALL datos 
+                      00484 
+Warning[203]: Found opcode in column 1. (call)
+0166   21DA           00485 call ret1s
+Warning[203]: Found opcode in column 1. (call)
+0167   21DA           00486 call ret1s
+Warning[203]: Found opcode in column 1. (call)
+0168   21DA           00487 call ret1s
+                      00488 
+Warning[203]: Found opcode in column 1. (goto)
+0169   2931           00489 goto ganador
+                      00490 
+                      00491 
+                      00492 
+                      00493 
+                      00494 ; SUBRUTINA PARA OBTENER JUGADOR CON MENOS TOQUES
+                      00495 
+016A                  00496 obtener_minimo:
+                      00497 
+Warning[203]: Found opcode in column 1. (movlw)
+016A   3026           00498 movlw 0x26
+Warning[203]: Found opcode in column 1. (movwf)
+016B   00AC           00499 movwf apuntador_cont
+                      00500 
+Warning[203]: Found opcode in column 1. (clrf)
+016C   01A4           00501 clrf cont_jugador
+Warning[203]: Found opcode in column 1. (clrf)
+016D   01D6           00502 clrf cont_jugador_temp
+                      00503 
+Warning[203]: Found opcode in column 1. (movf)
+016E   0827           00504 movf cont1, w
+Warning[203]: Found opcode in column 1. (movwf)
+016F   00C2           00505 movwf minimo
+                      00506 
+Warning[203]: Found opcode in column 1. (movlw)
+0170   3001           00507 movlw 0x1
+Warning[203]: Found opcode in column 1. (movwf)
+0171   00C3           00508 movwf indice_minimo
+                      00509 
+Warning[203]: Found opcode in column 1. (bcf)
+0172   1383           00510 bcf STATUS,IRP
+                      00511 
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE 18
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00512 
+0173                  00513 ciclo_minimo:
+                      00514 
+Warning[203]: Found opcode in column 1. (incf)
+Message[305]: Using default destination of 1 (file).
+0173   0AAC           00515 incf apuntador_cont
+Warning[203]: Found opcode in column 1. (incf)
+Message[305]: Using default destination of 1 (file).
+0174   0AA4           00516 incf cont_jugador
+                      00517 
+Warning[203]: Found opcode in column 1. (movf)
+0175   082C           00518 movf apuntador_cont, w
+Warning[203]: Found opcode in column 1. (movwf)
+0176   0084           00519 movwf FSR
+                      00520 
+                      00521 
+Warning[203]: Found opcode in column 1. (movf)
+0177   0800           00522 movf INDF, w
+Warning[203]: Found opcode in column 1. (movwf)
+0178   00A5           00523 movwf cont_toques
+                      00524 
+Warning[203]: Found opcode in column 1. (movf)
+0179   0825           00525 movf cont_toques, w
+Warning[203]: Found opcode in column 1. (movwf)
+017A   00C1           00526 movwf cont_toques_temp
+                      00527 
+Warning[203]: Found opcode in column 1. (movf)
+017B   0842           00528 movf minimo, w
+Warning[203]: Found opcode in column 1. (subwf)
+Message[305]: Using default destination of 1 (file).
+017C   02C1           00529 subwf cont_toques_temp
+                      00530 
+                      00531 
+Warning[203]: Found opcode in column 1. (btfss)
+017D   1C03           00532 btfss STATUS, C
+Warning[203]: Found opcode in column 1. (goto)
+017E   2980           00533 goto nuevo_minimo
+Warning[203]: Found opcode in column 1. (goto)
+017F   2984           00534 goto sig1
+                      00535 
+0180                  00536 nuevo_minimo:
+Warning[203]: Found opcode in column 1. (movf)
+0180   0825           00537 movf cont_toques, w
+Warning[203]: Found opcode in column 1. (movwf)
+0181   00C2           00538 movwf minimo
+                      00539 
+Warning[203]: Found opcode in column 1. (movf)
+0182   0824           00540 movf cont_jugador, w
+Warning[203]: Found opcode in column 1. (movwf)
+0183   00C3           00541 movwf indice_minimo
+                      00542 
+0184                  00543 sig1:
+                      00544 
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE 19
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[203]: Found opcode in column 1. (movf)
+0184   0824           00545 movf cont_jugador, w
+Warning[203]: Found opcode in column 1. (movwf)
+0185   00D6           00546 movwf cont_jugador_temp
+Warning[203]: Found opcode in column 1. (movf)
+0186   0823           00547 movf num_jugadores, w
+Warning[203]: Found opcode in column 1. (subwf)
+Message[305]: Using default destination of 1 (file).
+0187   02D6           00548 subwf cont_jugador_temp
+                      00549 
+Warning[203]: Found opcode in column 1. (btfss)
+0188   1D03           00550 btfss STATUS, Z
+Warning[203]: Found opcode in column 1. (goto)
+0189   2973           00551 goto ciclo_minimo
+                      00552 
+Warning[203]: Found opcode in column 1. (return)
+018A   0008           00553 return
+                      00554 
+                      00555 
+                      00556 
+                      00557 
+                      00558 
+                      00559 
+                      00560 
+                      00561 ; SUBRUTINA PARA IMPRIMIR TOQUES EN DECIMAL
+                      00562 
+018B                  00563 imprime_toques_dec:
+                      00564 
+                      00565 ; imprime numero en decimal
+Warning[203]: Found opcode in column 1. (movf)
+018B   0825           00566 movf cont_toques, w
+Warning[203]: Found opcode in column 1. (movwf)
+018C   00AD           00567 movwf hex0
+Warning[203]: Found opcode in column 1. (call)
+018D   2198           00568 call hex_a_dec
+                      00569 
+                      00570 ; imprime centenas
+Warning[203]: Found opcode in column 1. (movf)
+018E   0831           00571 movf dec2, w
+Warning[203]: Found opcode in column 1. (addlw)
+018F   3E30           00572 addlw 30
+Warning[203]: Found opcode in column 1. (CALL)
+0190   21D1           00573 CALL datos
+                      00574 
+                      00575 ; imprime decenas
+Warning[203]: Found opcode in column 1. (movf)
+0191   0832           00576 movf dec1, w
+Warning[203]: Found opcode in column 1. (addlw)
+0192   3E30           00577 addlw 30
+Warning[203]: Found opcode in column 1. (CALL)
+0193   21D1           00578 CALL datos
+                      00579 
+                      00580 ; imprime unidades
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE 20
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[203]: Found opcode in column 1. (movf)
+0194   0833           00581 movf dec0, w
+Warning[203]: Found opcode in column 1. (addlw)
+0195   3E30           00582 addlw 30
+Warning[203]: Found opcode in column 1. (CALL)
+0196   21D1           00583 CALL datos
+                      00584 
+Warning[203]: Found opcode in column 1. (return)
+0197   0008           00585 return
+                      00586 
+                      00587 
+                      00588 
+                      00589 
+                      00590 ; SUBRUTINA PARA CONVERTIR DE HEX A DEC
+                      00591 
+0198                  00592 hex_a_dec:
+                      00593 
+                      00594 ; se ponen en cero los valores decimales
+Warning[203]: Found opcode in column 1. (movlw)
+0198   3000           00595 movlw 0x0
+Warning[203]: Found opcode in column 1. (movwf)
+0199   00B3           00596 movwf dec0
+Warning[203]: Found opcode in column 1. (movwf)
+019A   00B2           00597 movwf dec1
+Warning[203]: Found opcode in column 1. (movwf)
+019B   00B1           00598 movwf dec2
+                      00599 
+                      00600 ;PARA DEC2 (CENTENAS)
+                      00601 
+                      00602 ; el contador se inicializa en -1 para su correcto uso
+Warning[203]: Found opcode in column 1. (movlw)
+019C   30FF           00603 movlw 0xff
+Warning[203]: Found opcode in column 1. (movwf)
+019D   00D4           00604 movwf cont1_dec
+                      00605 
+                      00606 ; se guarda el valor hexadecimal en un registro temporal
+Warning[203]: Found opcode in column 1. (movf)
+019E   082D           00607 movf hex0, w
+Warning[203]: Found opcode in column 1. (movwf)
+019F   00D2           00608 movwf temp1
+                      00609 
+                      00610 ; ciclo que realiza la division para centenas
+01A0                  00611 ciclo_div_dec2:
+Warning[203]: Found opcode in column 1. (incf)
+Message[305]: Using default destination of 1 (file).
+01A0   0AD4           00612 incf cont1_dec ; se incrementa el contador (aqui estara el resultado)
+Warning[203]: Found opcode in column 1. (movf)
+01A1   0852           00613 movf temp1, w
+Warning[203]: Found opcode in column 1. (movwf)
+01A2   00D3           00614 movwf temp2 ; se guarda el resultado en otro registro temporal (aqui estara el residuo)
+                      00615 
+                      00616 ; se le va restando 100
+Warning[203]: Found opcode in column 1. (movlw)
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE 21
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+01A3   3064           00617 movlw 0x64 
+Warning[203]: Found opcode in column 1. (subwf)
+Message[305]: Using default destination of 1 (file).
+01A4   02D2           00618 subwf temp1
+                      00619 
+Warning[203]: Found opcode in column 1. (btfsc)
+01A5   1803           00620 btfsc STATUS, C ; se checa la bandera carry para ver si se repite
+Warning[203]: Found opcode in column 1. (goto)
+01A6   29A0           00621 goto ciclo_div_dec2
+                      00622 
+                      00623 ;SE REGISTRA DEC2
+Warning[203]: Found opcode in column 1. (movf)
+01A7   0854           00624 movf cont1_dec, w
+Warning[203]: Found opcode in column 1. (movwf)
+01A8   00B1           00625 movwf dec2
+                      00626 
+                      00627 ;PARA DEC1 (DECENAS)
+                      00628 ; el codigo es muy similar a la seccion de arriba, solo marcare las diferencias
+Warning[203]: Found opcode in column 1. (movlw)
+01A9   30FF           00629 movlw 0xff
+Warning[203]: Found opcode in column 1. (movwf)
+01AA   00D4           00630 movwf cont1_dec
+                      00631 
+                      00632 ; en vez de guardar el valor hexadecimal inicial, se guarda el residuo de las centenas
+Warning[203]: Found opcode in column 1. (movf)
+01AB   0853           00633 movf temp2, w
+Warning[203]: Found opcode in column 1. (movwf)
+01AC   00D2           00634 movwf temp1
+                      00635 
+01AD                  00636 ciclo_div_dec1:
+Warning[203]: Found opcode in column 1. (incf)
+Message[305]: Using default destination of 1 (file).
+01AD   0AD4           00637 incf cont1_dec
+Warning[203]: Found opcode in column 1. (movf)
+01AE   0852           00638 movf temp1, w
+Warning[203]: Found opcode in column 1. (movwf)
+01AF   00D3           00639 movwf temp2
+                      00640 
+                      00641 ; se le va restando 10
+Warning[203]: Found opcode in column 1. (movlw)
+01B0   300A           00642 movlw 0xa
+Warning[203]: Found opcode in column 1. (subwf)
+Message[305]: Using default destination of 1 (file).
+01B1   02D2           00643 subwf temp1
+                      00644 
+Warning[203]: Found opcode in column 1. (btfsc)
+01B2   1803           00645 btfsc STATUS, C
+Warning[203]: Found opcode in column 1. (goto)
+01B3   29AD           00646 goto ciclo_div_dec1
+                      00647 
+                      00648 ;SE REGISTRA DEC1
+Warning[203]: Found opcode in column 1. (movf)
+01B4   0854           00649 movf cont1_dec, w
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE 22
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[203]: Found opcode in column 1. (movwf)
+01B5   00B2           00650 movwf dec1
+                      00651 
+                      00652 
+                      00653 ;SE REGISTRA DEC0
+                      00654 ; aqui simplemente se registra el residuo de las decenas que seran las unidades
+Warning[203]: Found opcode in column 1. (movf)
+01B6   0853           00655 movf temp2, w
+Warning[203]: Found opcode in column 1. (movwf)
+01B7   00B3           00656 movwf dec0
+                      00657 
+Warning[203]: Found opcode in column 1. (return)
+01B8   0008           00658 return
+                      00659 
+                      00660 
+                      00661 
+01B9                  00662 inicia_lcd:
+Warning[203]: Found opcode in column 1. (movlw)
+01B9   3030           00663 movlw 0x30
+Warning[203]: Found opcode in column 1. (call)
+01BA   21CA           00664 call comando
+Warning[203]: Found opcode in column 1. (call)
+01BB   21ED           00665 call ret100ms
+Warning[203]: Found opcode in column 1. (movlw)
+01BC   3030           00666 movlw 0x30 
+Warning[203]: Found opcode in column 1. (call)
+01BD   21CA           00667 call comando
+Warning[203]: Found opcode in column 1. (call)
+01BE   21ED           00668 call ret100ms 
+Warning[203]: Found opcode in column 1. (movlw)
+01BF   3038           00669 movlw 0x38
+Warning[203]: Found opcode in column 1. (call)
+01C0   21CA           00670 call comando 
+Warning[203]: Found opcode in column 1. (movlw)
+01C1   300C           00671 movlw 0x0c
+Warning[203]: Found opcode in column 1. (call)
+01C2   21CA           00672 call comando
+Warning[203]: Found opcode in column 1. (movlw)
+01C3   3001           00673 movlw 0x01
+Warning[203]: Found opcode in column 1. (call)
+01C4   21CA           00674 call comando
+Warning[203]: Found opcode in column 1. (movlw)
+01C5   3006           00675 movlw 0x06
+Warning[203]: Found opcode in column 1. (call)
+01C6   21CA           00676 call comando
+Warning[203]: Found opcode in column 1. (movlw)
+01C7   3002           00677 movlw 0x02
+Warning[203]: Found opcode in column 1. (call)
+01C8   21CA           00678 call comando
+Warning[203]: Found opcode in column 1. (return)
+01C9   0008           00679 return
+                      00680 
+                      00681 
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE 23
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+01CA                  00682 comando:
+Warning[203]: Found opcode in column 1. (movwf)
+01CA   0086           00683 movwf PORTB
+Warning[203]: Found opcode in column 1. (call)
+01CB   21E4           00684 call ret200
+Warning[203]: Found opcode in column 1. (bcf)
+01CC   1005           00685 bcf PORTA,0
+Warning[203]: Found opcode in column 1. (bsf)
+01CD   1485           00686 bsf PORTA,1
+Warning[203]: Found opcode in column 1. (call)
+01CE   21E4           00687 call ret200
+Warning[203]: Found opcode in column 1. (bcf)
+01CF   1085           00688 bcf PORTA,1
+Warning[203]: Found opcode in column 1. (return)
+01D0   0008           00689 return
+                      00690 
+                      00691 
+01D1                  00692 datos: 
+Warning[203]: Found opcode in column 1. (movwf)
+01D1   0086           00693 movwf PORTB 
+Warning[203]: Found opcode in column 1. (call)
+01D2   21E4           00694 call ret200
+Warning[203]: Found opcode in column 1. (bsf)
+01D3   1405           00695 bsf PORTA,0
+Warning[203]: Found opcode in column 1. (bsf)
+01D4   1485           00696 bsf PORTA,1
+Warning[203]: Found opcode in column 1. (call)
+01D5   21E4           00697 call ret200 
+Warning[203]: Found opcode in column 1. (bcf)
+01D6   1085           00698 bcf PORTA,1 
+Warning[203]: Found opcode in column 1. (call)
+01D7   21E4           00699 call ret200
+Warning[203]: Found opcode in column 1. (call)
+01D8   21E4           00700 call ret200
+Warning[203]: Found opcode in column 1. (return)
+01D9   0008           00701 return
+                      00702 
+01DA                  00703 ret1s:
+Warning[203]: Found opcode in column 1. (call)
+01DA   21ED           00704 call ret100ms
+Warning[203]: Found opcode in column 1. (call)
+01DB   21ED           00705 call ret100ms
+Warning[203]: Found opcode in column 1. (call)
+01DC   21ED           00706 call ret100ms
+Warning[203]: Found opcode in column 1. (call)
+01DD   21ED           00707 call ret100ms
+Warning[203]: Found opcode in column 1. (call)
+01DE   21ED           00708 call ret100ms
+Warning[203]: Found opcode in column 1. (call)
+01DF   21ED           00709 call ret100ms
+Warning[203]: Found opcode in column 1. (call)
+01E0   21ED           00710 call ret100ms
+Warning[203]: Found opcode in column 1. (call)
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE 24
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+01E1   21ED           00711 call ret100ms
+Warning[203]: Found opcode in column 1. (call)
+01E2   21ED           00712 call ret100ms
+Warning[203]: Found opcode in column 1. (call)
+01E3   21ED           00713 call ret100ms
+                      00714 
+                      00715 
+                      00716 
+01E4                  00717 ret200:
+Warning[203]: Found opcode in column 1. (movlw)
+01E4   3002           00718 movlw 0x02 
+Warning[203]: Found opcode in column 1. (movwf)
+01E5   00A1           00719 movwf valor1 
+01E6                  00720 loop: 
+Warning[203]: Found opcode in column 1. (movlw)
+01E6   30A4           00721 movlw d'164' 
+Warning[203]: Found opcode in column 1. (movwf)
+01E7   00A0           00722 movwf valor
+01E8                  00723 loop1: 
+Warning[203]: Found opcode in column 1. (decfsz)
+01E8   0BA0           00724 decfsz valor,1 
+Warning[203]: Found opcode in column 1. (goto)
+01E9   29E8           00725 goto loop1
+Warning[203]: Found opcode in column 1. (decfsz)
+01EA   0BA1           00726 decfsz valor1,1
+Warning[203]: Found opcode in column 1. (goto)
+01EB   29E6           00727 goto loop 
+Warning[203]: Found opcode in column 1. (return)
+01EC   0008           00728 return
+                      00729 
+                      00730 
+01ED                  00731 ret100ms: 
+Warning[203]: Found opcode in column 1. (movlw)
+01ED   3003           00732 movlw 0x03
+Warning[203]: Found opcode in column 1. (movwf)
+01EE   00A0           00733 movwf valor
+01EF                  00734 tres: 
+Warning[203]: Found opcode in column 1. (movlw)
+01EF   30FF           00735 movlw 0xff 
+Warning[203]: Found opcode in column 1. (movwf)
+01F0   00A1           00736 movwf valor1
+01F1                  00737 dos: 
+Warning[203]: Found opcode in column 1. (movlw)
+01F1   30FF           00738 movlw 0xff
+Warning[203]: Found opcode in column 1. (movwf)
+01F2   00A2           00739 movwf valor2
+01F3                  00740 uno: 
+Warning[203]: Found opcode in column 1. (decfsz)
+Message[305]: Using default destination of 1 (file).
+01F3   0BA2           00741 decfsz valor2 
+Warning[203]: Found opcode in column 1. (goto)
+01F4   29F3           00742 goto uno
+Warning[203]: Found opcode in column 1. (decfsz)
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE 25
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Message[305]: Using default destination of 1 (file).
+01F5   0BA1           00743 decfsz valor1
+Warning[203]: Found opcode in column 1. (goto)
+01F6   29F1           00744 goto dos
+Warning[203]: Found opcode in column 1. (decfsz)
+Message[305]: Using default destination of 1 (file).
+01F7   0BA0           00745 decfsz valor
+Warning[203]: Found opcode in column 1. (goto)
+01F8   29EF           00746 goto tres
+Warning[203]: Found opcode in column 1. (return)
+01F9   0008           00747 return
+                      00748 
+Warning[205]: Found directive in column 1. (end)
+                      00749 end
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE 26
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BRGH                              00000002
+C                                 00000000
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1                             00000015
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2                             0000001B
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CKE                               00000006
+CKP                               00000004
+CREN                              00000004
+CSRC                              00000007
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE 27
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+D_A                               00000005
+D_NOT_A                           00000005
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+GO_NOT_DONE                       00000002
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+OBF                               00000006
+OERR                              00000001
+OPTION_REG                        00000081
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE 28
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+R                                 00000002
+RA0                               00000000
+RA1                               00000001
+RA2                               00000002
+RA3                               00000003
+RA4                               00000004
+RA5                               00000005
+RB0                               00000000
+RB1                               00000001
+RB2                               00000002
+RB3                               00000003
+RB4                               00000004
+RB5                               00000005
+RB6                               00000006
+RB7                               00000007
+RBIE                              00000003
+RBIF                              00000000
+RC0                               00000000
+RC1                               00000001
+RC2                               00000002
+RC3                               00000003
+RC4                               00000004
+RC5                               00000005
+RC6                               00000006
+RC7                               00000007
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE 29
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+RD0                               00000000
+RD1                               00000001
+RD2                               00000002
+RD3                               00000003
+RD4                               00000004
+RD5                               00000005
+RD6                               00000006
+RD7                               00000007
+RE0                               00000000
+RE1                               00000001
+RE2                               00000002
+READ_WRITE                        00000002
+RP0                               00000005
+RP1                               00000006
+RSEN                              00000001
+RX9                               00000006
+RX9D                              00000000
+R_NOT_W                           00000002
+R_W                               00000002
+S                                 00000003
+SEN                               00000000
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATUS                            00000003
+SYNC                              00000004
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE 30
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1                              0000000E
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISA0                            00000000
+TRISA1                            00000001
+TRISA2                            00000002
+TRISA3                            00000003
+TRISA4                            00000004
+TRISA5                            00000005
+TRISB                             00000086
+TRISB0                            00000000
+TRISB1                            00000001
+TRISB2                            00000002
+TRISB3                            00000003
+TRISB4                            00000004
+TRISB5                            00000005
+TRISB6                            00000006
+TRISB7                            00000007
+TRISC                             00000087
+TRISC0                            00000000
+TRISC1                            00000001
+TRISC2                            00000002
+TRISC3                            00000003
+TRISC4                            00000004
+TRISC5                            00000005
+TRISC6                            00000006
+TRISC7                            00000007
+TRISD                             00000088
+TRISD0                            00000000
+TRISD1                            00000001
+TRISD2                            00000002
+TRISD3                            00000003
+TRISD4                            00000004
+TRISD5                            00000005
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE 31
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TRISD6                            00000006
+TRISD7                            00000007
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+UA                                00000001
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_BOREN_OFF                        00003FBF
+_BOREN_ON                         00003FFF
+_CONFIG                           00002007
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00000FCF
+_CP_HALF                          00001FDF
+_CP_OFF                           00003FFF
+_CP_UPPER_256                     00002FEF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_DEVID1                           00002006
+_FOSC_EXTRC                       00003FFF
+_FOSC_HS                          00003FFE
+_FOSC_LP                          00003FFC
+_FOSC_XT                          00003FFD
+_HS_OSC                           00003FFE
+_IDLOC0                           00002000
+_IDLOC1                           00002001
+_IDLOC2                           00002002
+_IDLOC3                           00002003
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDTE_OFF                         00003FFB
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE 32
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_WDTE_ON                          00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_ENABLE_OFF                   00003DFF
+_WRT_ENABLE_ON                    00003FFF
+_WRT_OFF                          00003DFF
+_WRT_ON                           00003FFF
+_XT_OSC                           00003FFD
+__16F877A                         00000001
+apuntador_cont                    0000002C
+ciclo_div_dec1                    000001AD
+ciclo_div_dec2                    000001A0
+ciclo_juego                       000000B0
+ciclo_minimo                      00000173
+comando                           000001CA
+cont1                             00000027
+cont1_dec                         00000054
+cont2                             00000028
+cont3                             00000029
+cont_jugador                      00000024
+cont_jugador_temp                 00000056
+cont_toques                       00000025
+cont_toques_temp                  00000041
+datos                             000001D1
+dec0                              00000033
+dec1                              00000032
+dec2                              00000031
+dos                               000001F1
+fin_juego                         00000105
+fin_recorrido                     000000DB
+ganador                           00000131
+hex0                              0000002D
+hex_a_dec                         00000198
+imprime_toques_dec                0000018B
+indice_minimo                     00000043
+inicia_lcd                        000001B9
+inicio                            00000005
+inicio_juego                      000000A3
+jugadores                         00000084
+loop                              000001E6
+loop1                             000001E8
+minimo                            00000042
+nombres                           0000001D
+nuevo_jugador                     000000AB
+nuevo_minimo                      00000180
+num_jugadores                     00000023
+obtener_minimo                    0000016A
+ret1                              000000C5
+ret100ms                          000001ED
+ret1s                             000001DA
+ret200                            000001E4
+si                                000000C6
+sig1                              00000184
+MPASM  5.48                   JUEGO_FERIA.ASM   5-22-2024  11:08:27         PAGE 33
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+temp1                             00000052
+temp2                             00000053
+tres                              000001EF
+uno                               000001F3
+valor                             00000020
+valor1                            00000021
+valor2                            00000022
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : X----XXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0080 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+00C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0100 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0140 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0180 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+01C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXX------
+
+All other memory blocks unused.
+
+Program Memory Words Used:   502
+Program Memory Words Free:  7690
+
+
+Errors   :     0
+Warnings :   507 reported,     0 suppressed
+Messages :    21 reported,     0 suppressed
+
+
