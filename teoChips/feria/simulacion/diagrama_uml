@@ -1,0 +1,28 @@
+digraph {
+	Inicio
+	Nombres
+	Jugadores
+	InicioJuego
+	NuevoJugador
+	CicloJuego
+	Si
+	Ret1
+	FinRecorrido
+	FinJuego
+	Ganador
+	ObtenerMinimo
+	Inicio -> Nombres
+	Nombres -> Jugadores
+	Jugadores -> InicioJuego
+	InicioJuego -> NuevoJugador
+	NuevoJugador -> CicloJuego
+	CicloJuego -> Si
+	CicloJuego -> FinRecorrido
+	Si -> Ret1
+	FinRecorrido -> NuevoJugador
+	NuevoJugador -> FinJuego
+	FinJuego -> Ganador
+	Ganador -> ObtenerMinimo
+	ObtenerMinimo -> Ret1
+	Ret1 -> Ganador
+}
