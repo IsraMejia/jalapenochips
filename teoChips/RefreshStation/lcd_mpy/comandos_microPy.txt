@@ -1,0 +1,14 @@
+ampy --port COM5 put main.py
+
+Subir lcd_api.py
+ampy --port COM5 put lcd_api.py lcd_api.py
+
+Subir i2c_lcd.py
+ampy --port COM5 put i2c_lcd.py i2c_lcd.py
+
+
+
+Verificar los Archivos en el ESP32
+Después de subir todos los archivos, verifica que todos estén presentes en el ESP32:
+ampy --port COM5 ls
+
