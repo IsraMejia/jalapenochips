@@ -1,0 +1,56 @@
+Teniendo en cuenta las siguientes conexiones de otro programa: 
+// Definir pines para los botones y los LEDs
+const int buttonPinOn = 2;  //encender ventilador, velocidad ++ 
+const int buttonPinOff = 3; //apagar ventilador 
+const int buttonPinAtomizar = 4;
+const int buttonPinServir = 5;
+const int buttonPinStopAgua = 6;
+const int ledPin = 9; // Cambiado a un pin PWM
+const int ledAtomizarPin = 10;
+const int ledAguaPin = 11;
+
+vuelve a hacer el codigo y la descricion de conexiones este programa que me has dado de control de la bomba de agua y del ventilador por PWM
+ten como prioridad las conexiones de este programa 
+// Motor A (Bomba de agua)
+int enA = 3;    // Pin de habilitación (Enable) para el Motor A, controla la velocidad mediante PWM
+int in1 = 9;    // Pin de control 1 para el Motor A, controla la dirección del motor
+int in2 = 10;   // Pin de control 2 para el Motor A, controla la dirección del motor
+
+// Motor B (Ventilador)
+int enB = 11;   // Pin de habilitación (Enable) para el Motor B, controla la velocidad mediante PWM
+int in3 = 5;    // Pin de control 3 para el Motor B, controla la dirección del motor
+int in4 = 6;    // Pin de control 4 para el Motor B, controla la dirección del motor
+
+// Botones
+int buttonFan = 2;   // Pin de entrada para el botón que controla la velocidad del ventilador
+int buttonPump = 7;  // Pin de entrada para el botón que activa la bomba de agua
+
+
+----------------------------------------
+
+Teniendo en cuenta las siguientes conexiones de otro programa: 
+// Definir pines para los botones y los LEDs
+const int buttonPinOn = 2;  //encender ventilador, velocidad ++ 
+const int buttonPinOff = 3; //apagar ventilador 
+const int buttonPinAtomizar = 4;
+const int buttonPinServir = 5;
+const int buttonPinStopAgua = 6;
+const int ledPin = 9; // Cambiado a un pin PWM
+const int ledAtomizarPin = 10;
+const int ledAguaPin = 11;
+
+agregalos y haz un reacomodo de la distribucion de los pines a modo de que esten lo mejor organizado de forma que haya minimos cambios pero todos los pines que necesiten señales PWM las tengan y las que no, no usen eso, igual que esten en cercania segun su funcionamiento
+Asigna con una priodad de los pines a continuacion de motores A y B
+// Motor A (Bomba de agua)
+int enA = 3;    // Pin de habilitación (Enable) para el Motor A, controla la velocidad mediante PWM
+int in1 = 9;    // Pin de control 1 para el Motor A, controla la dirección del motor
+int in2 = 10;   // Pin de control 2 para el Motor A, controla la dirección del motor
+
+// Motor B (Ventilador)
+int enB = 11;   // Pin de habilitación (Enable) para el Motor B, controla la velocidad mediante PWM
+int in3 = 5;    // Pin de control 3 para el Motor B, controla la dirección del motor
+int in4 = 6;    // Pin de control 4 para el Motor B, controla la dirección del motor
+
+// Botones
+int buttonFan = 2;   // Pin de entrada para el botón que controla la velocidad del ventilador
+int buttonPump = 7;  // Pin de entrada para el botón que activa la bomba de agua
