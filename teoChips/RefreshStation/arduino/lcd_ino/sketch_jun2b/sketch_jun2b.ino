@@ -107,7 +107,6 @@ void loop() {
       lcd.clear();
       lcd.setCursor(0, 0);
       lcd.print("sirviendo 100ml");
-      digitalWrite(ledAguaPin, HIGH);
       sirviendoAgua = true;
       tiempoInicioServir = millis(); // Registrar el tiempo de inicio
       // Esperar a que se suelte el botón
@@ -160,7 +159,7 @@ void actualizarPantalla() {
     lcd.print("v= "); // Imprimir en la segunda fila
     lcd.print(velocidad); // Imprimir la velocidad actual
   } else {
-    lcd.print("Ventilador"); // Imprimir en la primera fila 
+    lcd.print("Ventilador"); // Imprimir en la primera fila
     lcd.setCursor(0, 1); // Posicionar el cursor en la primera columna, segunda fila
     lcd.print("apagado"); // Imprimir en la segunda fila
   }
